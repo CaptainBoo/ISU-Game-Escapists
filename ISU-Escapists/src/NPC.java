@@ -2,8 +2,7 @@ import java.util.ArrayList;
 
 abstract public class NPC {
 	private String name;
-	private int opinion;
-	private int health;
+	private int opinion, health, x, y;
 	
 	ArrayList<Item> Inventory = new ArrayList<>(5);
 	
