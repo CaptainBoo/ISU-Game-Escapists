@@ -15,6 +15,8 @@ public class TheEscapists extends JPanel implements Runnable, MouseListener, Mou
 	int mouseX, mouseY;
 	Thread thread;
 	
+	Image[] itemImages;
+	
 	public TheEscapists () {
 		
 		setPreferredSize(new Dimension(800, 600));
@@ -31,8 +33,21 @@ public class TheEscapists extends JPanel implements Runnable, MouseListener, Mou
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.drawRect(10, 10, 100, 100);
+		
+		g2.drawImage (itemImages[0],10,70, 200, 200,this);
 	}
 
+	
+	
+	public void initialize() {
+		itemImages = new Image[5];
+		itemImages [0]= Toolkit.getDefaultToolkit().getImage("flimsy_pickaxe.png");
+	}
+	
+	public void update() {
+		
+	}
+	
 	public void run() {
 		initialize();
 		while(true) {
@@ -44,14 +59,6 @@ public class TheEscapists extends JPanel implements Runnable, MouseListener, Mou
 				e.printStackTrace();
 			}
 		}
-	}
-	
-	public void initialize() {
-		
-	}
-	
-	public void update() {
-		
 	}
 
 	public void mouseClicked(MouseEvent e) {
