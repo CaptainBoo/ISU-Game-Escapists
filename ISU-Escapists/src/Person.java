@@ -1,13 +1,17 @@
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
 abstract public class Person {
 
 	private String name;
-	private int health, x, y, destX, destY;
+	protected int health, x, y;
 	private Rectangle hitbox;
+	
 	private boolean currentlyPathfinding;
-	private int frameIndex;
+	private int destX, destY;
+	
+	protected int frameIndex;
 
 	private Item[] inventory = new Item[6];
 
@@ -58,7 +62,7 @@ abstract public class Person {
 		currentlyPathfinding = true;
 	}
 
-	public void movement() {
+	public void NPCmovement() {
 		if (!currentlyPathfinding) {
 			findRandomPoint(1000, 1000);
 		}
