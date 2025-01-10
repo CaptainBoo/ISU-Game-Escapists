@@ -37,6 +37,7 @@ public class TheEscapists extends JPanel implements Runnable, MouseListener, Mou
 		g2.drawRect(10, 10, 100, 100);
 		
 		g2.drawImage (itemImages[0],10,70, 200, 200,this);
+		g2.drawImage (itemImages[1],100,700, 144, 213,this);
 		
 		g2.drawRect(hi.getX(), hi.getY(), hi.getHitbox().width,  hi.getHitbox().height);
 	}
@@ -46,7 +47,7 @@ public class TheEscapists extends JPanel implements Runnable, MouseListener, Mou
 	public void initialize() {
 		itemImages = new Image[5];
 		itemImages [0]= Toolkit.getDefaultToolkit().getImage("flimsy_pickaxe.png");
-		
+		itemImages [1]= Toolkit.getDefaultToolkit().getImage("escapists_character_temp.png");
 	}
 	
 	public void update() {
