@@ -18,7 +18,12 @@ public class TheEscapists extends JPanel implements Runnable, MouseListener, Mou
 	int mouseX, mouseY;
 	Thread thread;
 	
+	Image[] images;
+	
+	Prisoner hi = new Prisoner("hi");
+	
 	public TheEscapists () {
+
 		BufferedImage image;
 		try { 
 			image = ImageIO.read(new File("map.jpeg"));
@@ -29,6 +34,7 @@ public class TheEscapists extends JPanel implements Runnable, MouseListener, Mou
 		}catch (Exception e){
 		}
 		setPreferredSize(new Dimension(1920, 1088));
+
 		setLocation(100, 100);
 		thread = new Thread(this);
 		thread.start();
@@ -43,6 +49,7 @@ public class TheEscapists extends JPanel implements Runnable, MouseListener, Mou
 		Graphics2D g = (Graphics2D) graphic;
 		super.paintComponent(g);
 
+
 		if (offScreenBuffer == null)
 		{
 			offScreenImage = createImage (this.getWidth (), this.getHeight ());
@@ -55,8 +62,30 @@ public class TheEscapists extends JPanel implements Runnable, MouseListener, Mou
 		offScreenBuffer.setColor(new Color(48, 55, 65,150));
 		offScreenBuffer.fillRect(110, 110, 90, 90);
 		g.drawImage(offScreenImage, 0, 0, this);
+		Graphics2D g2 = (Graphics2D) g;
+		g2.drawRect(10, 10, 100, 100);
+		
+		g2.drawImage (images[0],10,70, 200, 200,this);
+		g2.drawImage (images[1],100,700, 144, 213,this);
+		
+		g2.drawRect(hi.getX(), hi.getY(), hi.getHitbox().width,  hi.getHitbox().height);
+
 	}
 
+	
+	
+	public void initialize() {
+		images = new Image[5];
+		images [0]= Toolkit.getDefaultToolkit().getImage("flimsy_pickaxe.png");
+		images [1]= Toolkit.getDefaultToolkit().getImage("escapists_character_temp.png");
+		
+		
+	}
+	
+	public void update() {
+		hi.movement();
+	}
+	
 	public void run() {
 		initialize();
 		while(true) {
@@ -68,14 +97,6 @@ public class TheEscapists extends JPanel implements Runnable, MouseListener, Mou
 				e.printStackTrace();
 			}
 		}
-	}
-	
-	public void initialize() {
-		
-	}
-	
-	public void update() {
-		
 	}
 
 	public void mouseClicked(MouseEvent e) {

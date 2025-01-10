@@ -1,12 +1,18 @@
+import java.awt.Image;
 
 public class Item {
-	private static String itemName;
+	private String itemName;
+	private Image itemImage;
 	
 	public Item (String name) {
-		itemName = name;
+		this.itemName = name;
 	}
 
-	public static String getItemName() {
-		return itemName;
+	public String getItemName() {
+		return this.itemName;
+	}
+	
+	public Image getItemImage() {
+		return this.itemImage;
 	}
 }
