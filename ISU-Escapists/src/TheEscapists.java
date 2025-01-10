@@ -1,8 +1,10 @@
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Arrays;
 import java.awt.*;
 
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -10,14 +12,23 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class TheEscapists extends JPanel implements Runnable, MouseListener, MouseMotionListener {
-	
+	Graphics offScreenBuffer;
+	Image offScreenImage, map;
 	int FPS = 60;
 	int mouseX, mouseY;
 	Thread thread;
 	
 	public TheEscapists () {
-		
-		setPreferredSize(new Dimension(800, 600));
+		BufferedImage image;
+		try { 
+			image = ImageIO.read(new File("map.jpeg"));
+			int scaledWidth = image.getWidth() *9; // Adjust the scale factor as needed
+			int scaledHeight = image.getHeight() * 9;
+			map = image.getScaledInstance(scaledWidth,scaledHeight,Image.SCALE_SMOOTH);
+
+		}catch (Exception e){
+		}
+		setPreferredSize(new Dimension(1920, 1088));
 		setLocation(100, 100);
 		thread = new Thread(this);
 		thread.start();
@@ -27,10 +38,23 @@ public class TheEscapists extends JPanel implements Runnable, MouseListener, Mou
 		
 	}
 	
-	public void paintComponent (Graphics g) {
+	public void paintComponent (Graphics graphic) {
+		//super.paintComponent(g);
+		Graphics2D g = (Graphics2D) graphic;
 		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D) g;
-		g2.drawRect(10, 10, 100, 100);
+
+		if (offScreenBuffer == null)
+		{
+			offScreenImage = createImage (this.getWidth (), this.getHeight ());
+			offScreenBuffer = offScreenImage.getGraphics ();
+		}
+		
+		offScreenBuffer.drawImage(map,-500,0,this);
+		offScreenBuffer.setColor(new Color(120,137,148));
+		offScreenBuffer.fillRect(100, 100, 120, 120);
+		offScreenBuffer.setColor(new Color(48, 55, 65,150));
+		offScreenBuffer.fillRect(110, 110, 90, 90);
+		g.drawImage(offScreenImage, 0, 0, this);
 	}
 
 	public void run() {

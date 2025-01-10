@@ -1,4 +1,4 @@
-package StardewValley.src;
+package StardewValley;
 
 //Estar Guan
 //ISU Game
