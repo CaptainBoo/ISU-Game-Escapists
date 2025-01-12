@@ -19,8 +19,8 @@ abstract public class Person {
 		this.name = name;
 		this.health = 100;
 		this.hitbox = new Rectangle(50, 100);
-		this.x = 50;
-		this.y = 50;
+		this.x = 800;
+		this.y = 400;
 	}
 
 	public int getX() {
