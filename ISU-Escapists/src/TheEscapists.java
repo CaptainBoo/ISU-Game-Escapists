@@ -32,13 +32,13 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		BufferedImage image;
 		try {
 			image = ImageIO.read(new File("map5.png"));
-			int scaledWidth = (int) (image.getWidth()*1.5); // Adjust the scale factor as needed
-			int scaledHeight = (int)(image.getHeight()*1.5);
+			int scaledWidth = image.getWidth()*2; // Adjust the scale factor as needed
+			int scaledHeight = image.getHeight()*2;
 			map = image.getScaledInstance(scaledWidth,scaledHeight,Image.SCALE_SMOOTH);
 
 		}catch (Exception e){
 		}
-		setPreferredSize(new Dimension(1920, 1088));
+		setPreferredSize(new Dimension(1472, 832));
 
 		setLocation(100, 100);
 		thread = new Thread(this);
@@ -57,7 +57,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 			offScreenBuffer = offScreenImage.getGraphics ();
 		}
 
-		offScreenBuffer.drawImage(map,-1600,-800,this);
+		offScreenBuffer.drawImage(map,-3000,-2000,this);
 		offScreenBuffer.setColor(new Color(120,137,148));
 		offScreenBuffer.fillRect(100, 100, 120, 120);
 		offScreenBuffer.setColor(new Color(48, 55, 65,150));
@@ -68,7 +68,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		g.drawImage (images[1],500,700, 30, 30,this);
 
 		g.drawRect(prisoner.getX(), prisoner.getY(), prisoner.getHitbox().width, prisoner.getHitbox().height);
-		g.drawImage(playerFrames[0], player.getX(), player.getY(),60,40, this);
+		g.drawImage(playerFrames[0], player.getX(), player.getY(),40,100, this);
 
 	}
 

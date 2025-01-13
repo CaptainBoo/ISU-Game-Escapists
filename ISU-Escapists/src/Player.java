@@ -8,13 +8,13 @@ public class Player extends Person {
 
 	public void move (String dir) {
 		if (dir.equals("left")) {
-			this.x--;
+			this.x-=8;
 		} else if (dir.equals("up")) {
-			this.y--;
+			this.y-=8;
 		} else if (dir.equals("right")) {
-			this.x++;
+			this.x+=8;
 		} else if (dir.equals("down")) {
-			this.y++;
+			this.y+=8;
 		}
 	}
 }
