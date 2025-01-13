@@ -13,11 +13,14 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class TheEscapists extends JPanel implements Runnable, KeyListener, MouseListener, MouseMotionListener {
+	int frame = 0;
 	Graphics offScreenBuffer;
-	Image offScreenImage, map;
+	Image offScreenImage;
 	int FPS = 60;
 	int mouseX, mouseY;
 	Thread thread;
+	Map map;
+	boolean left,right,up,down;
 	
 	Set<Integer> keys = new HashSet<Integer>();
 
@@ -29,20 +32,15 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 
 	public TheEscapists () {
 
-		BufferedImage image;
-		try {
-			image = ImageIO.read(new File("map5.png"));
-			int scaledWidth = image.getWidth()*2; // Adjust the scale factor as needed
-			int scaledHeight = image.getHeight()*2;
-			map = image.getScaledInstance(scaledWidth,scaledHeight,Image.SCALE_SMOOTH);
-
-		}catch (Exception e){
-		}
+		//Set up Panel and thread
 		setPreferredSize(new Dimension(1472, 832));
-
 		setLocation(100, 100);
 		thread = new Thread(this);
 		thread.start();
+		
+		//Make my class instances
+		map = new Map();
+		
 	}
 
 	public void paintComponent (Graphics graphic) {
@@ -57,7 +55,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 			offScreenBuffer = offScreenImage.getGraphics ();
 		}
 
-		offScreenBuffer.drawImage(map,-3000,-2000,this);
+		offScreenBuffer.drawImage(map.getImage(),map.getX(),map.getY(),this);
 		offScreenBuffer.setColor(new Color(120,137,148));
 		offScreenBuffer.fillRect(100, 100, 120, 120);
 		offScreenBuffer.setColor(new Color(48, 55, 65,150));
@@ -68,7 +66,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		g.drawImage (images[1],500,700, 30, 30,this);
 
 		g.drawRect(prisoner.getX(), prisoner.getY(), prisoner.getHitbox().width, prisoner.getHitbox().height);
-		g.drawImage(playerFrames[0], player.getX(), player.getY(),40,100, this);
+		g.drawImage(playerFrames[0], player.getX(), player.getY(),40,90, this);
 
 	}
 
@@ -82,6 +80,25 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		playerFrames = new Image[1];
 		playerFrames[0] = character0;
 	}
+	
+	public void move() {
+		if (frame %500 == 0) {
+			System.out.println(left);
+			System.out.println(right);
+			System.out.println(up);
+			System.out.println(down);
+			
+		}
+		if (left) {
+			map.move("left");
+		}if (right) {
+			map.move("right");
+		}if (down) {
+			map.move("down");
+		}if (up) {
+			map.move("up");
+		}repaint();
+	}
 
 	public void update() {
 		prisoner.NPCmovement();
@@ -90,8 +107,13 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	public void run() {
 		initialize();
 		while(true) {
+			frame++;
+			
 			update();
 			this.repaint();
+			
+			move();
+			
 			try {
 				Thread.sleep(1000/FPS);
 			}catch(Exception e) {
@@ -134,29 +156,38 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	public void keyTyped(KeyEvent e) {
 	}
 
-	public void keyPressed(KeyEvent e) {keys.add(e.getKeyCode());
-		runKeys();
+	public void keyPressed(KeyEvent e) {
+		int key = e.getKeyCode();
+		if (key == KeyEvent.VK_A) {
+			left = true;
+		}
+		if (key == KeyEvent.VK_W) {
+			up = true;
+		}
+		if (key == KeyEvent.VK_D) {
+			right = true;
+		}
+		if (key == KeyEvent.VK_S) {
+			down = true;
+		}
 		repaint();
 	}
 
 	public void keyReleased(KeyEvent e) {
-		keys.remove(e.getKeyCode());
-	}
-	
-	public void runKeys() {
-		for (Integer key : keys) {
-			if (key == KeyEvent.VK_A) {
-				player.move("left");
-			}
-			if (key == KeyEvent.VK_W) {
-				player.move("up");
-			}
-			if (key == KeyEvent.VK_D) {
-				player.move("right");
-			}
-			if (key == KeyEvent.VK_S) {
-				player.move("down");
-			}
+		int key = e.getKeyCode();
+		if (key == KeyEvent.VK_A) {
+			left = false;
+		}
+		if (key == KeyEvent.VK_W) {
+			up = false;
+		}
+		if (key == KeyEvent.VK_D) {
+			right = false;
+		}
+		if (key == KeyEvent.VK_S) {
+			down = false;
 		}
 	}
+	
+	
 }
