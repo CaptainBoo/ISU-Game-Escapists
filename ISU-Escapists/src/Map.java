@@ -38,13 +38,13 @@ public class Map {
 	
 	public void move (String dir) {
 		if (dir.equals("left")) {
-			this.xCord+=4;
+			this.xCord+=8;
 		} else if (dir.equals("up")) {
-			this.yCord+=4;
+			this.yCord+=8;
 		} else if (dir.equals("right")) {
-			this.xCord-=4;
+			this.xCord-=8;
 		} else if (dir.equals("down")) {
-			this.yCord-=4;
+			this.yCord-=8;
 		}
 	}
 }

@@ -82,13 +82,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	}
 	
 	public void move() {
-		if (frame %500 == 0) {
-			System.out.println(left);
-			System.out.println(right);
-			System.out.println(up);
-			System.out.println(down);
-			
-		}
+		
 		if (left) {
 			map.move("left");
 		}if (right) {
