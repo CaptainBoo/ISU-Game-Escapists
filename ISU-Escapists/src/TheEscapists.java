@@ -119,6 +119,8 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	public void mouseClicked(MouseEvent e) {
 	}
 	public void mousePressed(MouseEvent e) {
+		System.out.println(e.getX());
+		System.out.println(e.getY());
 	}
 	public void mouseReleased(MouseEvent e) {
 	}
