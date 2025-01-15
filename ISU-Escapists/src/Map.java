@@ -21,8 +21,8 @@ public class Map {
 
 		}catch (Exception e){
 		}
-		xCord = 3000;
-		yCord = 2000;
+		xCord = -3000;
+		yCord = -2000;
 	}
 	
 	public int getX() {
@@ -38,13 +38,13 @@ public class Map {
 	
 	public void move (String dir) {
 		if (dir.equals("left")) {
-			this.xCord-=8;
-		} else if (dir.equals("up")) {
-			this.yCord-=8;
-		} else if (dir.equals("right")) {
 			this.xCord+=8;
-		} else if (dir.equals("down")) {
+		} else if (dir.equals("up")) {
 			this.yCord+=8;
+		} else if (dir.equals("right")) {
+			this.xCord-=8;
+		} else if (dir.equals("down")) {
+			this.yCord-=8;
 		}
 	}
 }
