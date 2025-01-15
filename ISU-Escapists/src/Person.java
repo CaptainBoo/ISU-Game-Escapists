@@ -55,6 +55,10 @@ abstract public class Person {
 	public Item[] getInventory() {
 		return inventory;
 	}
+	
+	public int getFrameIndex() {
+		return frameIndex;
+	}
 
 	public void findRandomPoint(int mapLength, int mapWidth) {
 		destX = (int) (Math.random() * mapLength + 1);

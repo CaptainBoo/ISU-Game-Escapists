@@ -28,7 +28,8 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	Image[] playerFrames;
 
 	Player player = new Player();
-	Prisoner prisoner = new Prisoner("test");
+	
+	Prisoner[] prisoners;
 
 	public TheEscapists () {
 
@@ -38,7 +39,8 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		thread = new Thread(this);
 		thread.start();
 		
-		
+		//Make my class instances
+		map = new Map();
 		
 	}
 
@@ -53,28 +55,32 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 			offScreenBuffer = offScreenImage.getGraphics ();
 		}
 
-		offScreenBuffer.drawImage(map.getImage(),-map.getX(),-map.getY(),this);
-		offScreenBuffer.setColor(new Color(120,137,148));
-		offScreenBuffer.fillRect(100, 100, 120, 120);
-		offScreenBuffer.setColor(new Color(48, 55, 65,150));
-		offScreenBuffer.fillRect(110, 110, 90, 90);
-		g.drawImage(offScreenImage, 0, 0, this);
+//		offScreenBuffer.drawImage(map.getImage(),-map.getX(),-map.getY(),this);
+//		offScreenBuffer.setColor(new Color(120,137,148));
+//		offScreenBuffer.fillRect(100, 100, 120, 120);
+//		offScreenBuffer.setColor(new Color(48, 55, 65,150));
+//		offScreenBuffer.fillRect(110, 110, 90, 90);
+//		g.drawImage(offScreenImage, 0, 0, this);
 		
 		g.drawImage(map.getImage(),-map.getX(),-map.getY(),this);
 
 		g.drawImage (images[0],200,100, 200, 200,this);
 		g.drawImage (images[1],500,700, 30, 30,this);
 
-		g.drawImage(playerFrames[0], prisoner.getX() - map.getX(), prisoner.getY() - map.getY(), prisoner.getHitbox().width, prisoner.getHitbox().height, this);
+		
 		g.drawImage(playerFrames[0], player.getX(), player.getY(),40,90, this);
 		
-		
+		for (int i = 0; i < prisoners.length; i++) {
+			g.drawImage(playerFrames[0], prisoners[i].getX() - map.getX(), prisoners[i].getY() - map.getY(), prisoners[i].getHitbox().width, prisoners[i].getHitbox().height, this);
+		}
 	}
 
 	public void initialize() {
-		//Make my class instances
-		map = new Map();
+		
 		images = new Image[5];
+		prisoners = new Prisoner[2];
+		prisoners[0] = new Prisoner("John");
+		prisoners[1] = new Prisoner("Eric");
 		
 		images [0]= Toolkit.getDefaultToolkit().getImage("flimsy_pickaxe.png");
 		Image character0 = Toolkit.getDefaultToolkit().getImage("escapists_character_temp.png");
@@ -99,7 +105,10 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	}
 
 	public void update() {
-		prisoner.NPCmovement();
+		for (Prisoner prisoner : prisoners) {
+			prisoner.NPCmovement();
+		}
+		
 	}
 
 	public void run() {
