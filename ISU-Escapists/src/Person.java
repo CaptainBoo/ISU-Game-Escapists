@@ -10,7 +10,7 @@ abstract public class Person {
 	
 	private boolean currentlyPathfinding;
 	private int destX, destY;
-	
+
 	protected int frameIndex;
 
 	private Item[] inventory = new Item[6];
@@ -18,9 +18,10 @@ abstract public class Person {
 	public Person (String name) {
 		this.name = name;
 		this.health = 100;
-		this.hitbox = new Rectangle(50, 100);
-		this.x = 736;
-		this.y = 416;
+		this.hitbox = new Rectangle(40, 90);
+		x = 3000;
+		y = 2000;
+		
 	}
 
 	public int getX() {
@@ -67,14 +68,23 @@ abstract public class Person {
 			findRandomPoint(1000, 1000);
 		}
 		
-		if (x == destX && y == destY) {
+		if (Math.hypot(x-destX, y-destY) < 5) {
 			currentlyPathfinding = false;
 			return;
 		}
 		
-		if (x < destX) x++;
-		else x--;
-		if (y < destY) y++;
-		else y--;
+		if (x < destX) {
+			x++;
+		}
+		else {
+			x--;
+		}
+		if (y < destY) {
+			y++;
+		}
+		else {
+			y--;
+		}
+		
 	}
 }
