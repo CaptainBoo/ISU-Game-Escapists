@@ -60,43 +60,31 @@ abstract public class Person {
 	}
 
 	public void findRandomPoint(int mapLength, int mapWidth) {
-//		destX = (int) (Math.random() * mapLength + 1);
-//		destY = (int) (Math.random() * mapWidth + 1);
-//		System.out.println("Point is " + destX + " " + destY);
-//		currentlyPathfinding = true;
+		destX = (int) (Math.random() * mapLength + 1);
+		destY = (int) (Math.random() * mapWidth + 1);
+		System.out.println("Point is " + destX + " " + destY);
+		currentlyPathfinding = true;
 	}
 
-	public ArrayList<int[]> findPath(int[][] grid, int[] start, int[] goal) {
-		int rows = grid.length;
-		int cols = grid.length;
-		
-		Queue <int[]> queue = new LinkedList<>();
-		queue.add(start);
-		
-		while(!queue.isEmpty()) {
-			int[] currentPos = queue.poll();
+	public void NPCmovement() {
+		if (!currentlyPathfinding) {
+			findRandomPoint(1000, 1000);
 		}
-		
-//		if (!currentlyPathfinding) {
-//			findRandomPoint(1000, 1000);
-//		}
-//		
-//		if (Math.hypot(x-destX, y-destY) < 5) {
-//			currentlyPathfinding = false;
-//			return;
-//		}
-//		
-//		if (x < destX) {
-//			x++;
-//		}
-//		else {
-//			x--;
-//		}
-//		if (y < destY) {
-//			y++;
-//		}
-//		else {
-//			y--;
-//		}
+		if (Math.hypot(x-destX, y-destY) < 5) {
+			currentlyPathfinding = false;
+			return;
+		}
+		if (x < destX) {
+			x++;
+		}
+		else {
+			x--;
+		}
+		if (y < destY) {
+			y++;
+		}
+		else {
+			y--;
+		}
 	}
 }

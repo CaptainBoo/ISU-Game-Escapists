@@ -7,18 +7,16 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 
 public class Map {
+	private int[][] mapArr = new int[121][114];
 	private int xCord;
 	private int yCord;
 	private Image mapImg;
 	
 	public Map() {
+		setCollisionSpaces();
 		BufferedImage image;
 		try {
-<<<<<<< Updated upstream
-			image = ImageIO.read(new File("map6.png"));
-=======
 			image = ImageIO.read(new File("map7.png"));
->>>>>>> Stashed changes
 			int scaledWidth = image.getWidth()*2; // Adjust the scale factor as needed
 			int scaledHeight = image.getHeight()*2;
 			mapImg = image.getScaledInstance(scaledWidth,scaledHeight,Image.SCALE_SMOOTH);
@@ -38,6 +36,20 @@ public class Map {
 	
 	public Image getImage() {
 		return this.mapImg;
+	}
+		
+	public int[][] getMapArr(){
+		return this.mapArr;
+	}
+	public void setCollisionSpaces() {	
+		for (int i = 0; i < mapArr.length; i++) {
+			for (int j = 0; j<mapArr[i].length;j++) {
+				mapArr[i][j] = 0;
+			}
+		}
+		for (int i = 64; i <= 92; i++) {
+			mapArr[58][i] =1;
+		}
 	}
 	
 	public void move (String dir) {

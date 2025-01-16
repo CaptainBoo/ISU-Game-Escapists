@@ -13,11 +13,7 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class TheEscapists extends JPanel implements Runnable, KeyListener, MouseListener, MouseMotionListener {
-<<<<<<< Updated upstream
-=======
-
 	
->>>>>>> Stashed changes
 	int frame = 0;
 	Graphics offScreenBuffer;
 	Image offScreenImage;
@@ -37,38 +33,16 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	Prisoner[] prisoners;
 
 	public TheEscapists () {
-<<<<<<< Updated upstream
-
-=======
-
-
-		BufferedImage image;
-		try {
-			image = ImageIO.read(new File("map5.png"));
-			int scaledWidth = image.getWidth()*2; // Adjust the scale factor as needed
-			int scaledHeight = image.getHeight()*2;
-			map = image.getScaledInstance(scaledWidth,scaledHeight,Image.SCALE_SMOOTH);
-
-		}catch (Exception e){
-		}
-
 		//Make my class instances
 		map = new Map();
 				
->>>>>>> Stashed changes
 		//Set up Panel and thread
 		setPreferredSize(new Dimension(1472, 832));
 		setLocation(100, 100);
 		thread = new Thread(this);
 		thread.start();
-<<<<<<< Updated upstream
 		
-		//Make my class instances
-		map = new Map();
 		
-=======
-
->>>>>>> Stashed changes
 	}
 
 	public void paintComponent (Graphics graphic) {
@@ -94,18 +68,14 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		g.drawImage (images[0],200,100, 200, 200,this);
 		g.drawImage (images[1],500,700, 30, 30,this);
 
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 		
-		g.drawImage(playerFrames[0], player.getX(), player.getY(),40,90, this);
+		g.drawImage(playerFrames[0], 736, 416,40,90, this);
 		
 		for (int i = 0; i < prisoners.length; i++) {
 			g.drawImage(playerFrames[0], prisoners[i].getX() - map.getX(), prisoners[i].getY() - map.getY(), prisoners[i].getHitbox().width, prisoners[i].getHitbox().height, this);
+	
 		}
 	}
-
 	public void initialize() {
 		
 		images = new Image[5];
@@ -118,24 +88,8 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 
 		playerFrames = new Image[1];
 		playerFrames[0] = character0;
-<<<<<<< Updated upstream
 		
 		
-	}
-	
-	public void move() {
-		
-		if (left) {
-			map.move("left");
-		}if (right) {
-			map.move("right");
-		}if (down) {
-			map.move("down");
-		}if (up) {
-			map.move("up");
-		}repaint();
-=======
-
 	}
 	
 	public void move() {
@@ -152,7 +106,6 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		}else {
 			//System.out.println("ran");
 		}
->>>>>>> Stashed changes
 	}
 
 	public void update() {
@@ -183,11 +136,6 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	public void mouseClicked(MouseEvent e) {
 	}
 	public void mousePressed(MouseEvent e) {
-<<<<<<< Updated upstream
-		System.out.println(e.getX());
-		System.out.println(e.getY());
-=======
-
 		PointerInfo pointerInfo = MouseInfo.getPointerInfo();
 		int mouseX = pointerInfo.getLocation().x;
 		int mouseY = pointerInfo.getLocation().y;
@@ -199,8 +147,6 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		System.out.println(mouseY + " " + mouseX);
 		System.out.println(arrRow + " " + arrCol);
 		System.out.println(worldRow + " " + worldCol);
-
->>>>>>> Stashed changes
 	}
 	public void mouseReleased(MouseEvent e) {
 	}
