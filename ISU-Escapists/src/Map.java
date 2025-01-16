@@ -14,7 +14,11 @@ public class Map {
 	public Map() {
 		BufferedImage image;
 		try {
+<<<<<<< Updated upstream
 			image = ImageIO.read(new File("map6.png"));
+=======
+			image = ImageIO.read(new File("map7.png"));
+>>>>>>> Stashed changes
 			int scaledWidth = image.getWidth()*2; // Adjust the scale factor as needed
 			int scaledHeight = image.getHeight()*2;
 			mapImg = image.getScaledInstance(scaledWidth,scaledHeight,Image.SCALE_SMOOTH);
