@@ -66,6 +66,7 @@ abstract public class Person {
 		System.out.println("Point is " + destX + " " + destY);
 		currentlyPathfinding = true;
 	}
+<<<<<<< Updated upstream
 
 	public void NPCmovement() {
 		if (!currentlyPathfinding) {
@@ -91,4 +92,64 @@ abstract public class Person {
 		}
 		
 	}
+=======
+	public void NPCmovement() {
+		if (!currentlyPathfinding) {
+			findRandomPoint(1000, 1000);
+		}
+		
+		if (Math.hypot(x-destX, y-destY) < 5) {
+			currentlyPathfinding = false;
+			return;
+		}
+		
+		if (x < destX) {
+			x++;
+		}
+		else {
+			x--;
+		}
+		if (y < destY) {
+			y++;
+		}
+		else {
+			y--;
+		}
+		
+	}
+
+//	public ArrayList<int[]> findPath(int[][] grid, int[] start, int[] goal) {
+//		int rows = grid.length;
+//		int cols = grid.length;
+//		
+//		Queue <int[]> queue = new LinkedList<>();
+//		queue.add(start);
+//		
+//		while(!queue.isEmpty()) {
+//			int[] currentPos = queue.poll();
+//		}
+//		
+//		if (!currentlyPathfinding) {
+//			findRandomPoint(1000, 1000);
+//		}
+//		
+//		if (Math.hypot(x-destX, y-destY) < 5) {
+//			currentlyPathfinding = false;
+//			return ;
+//		}
+//		
+//		if (x < destX) {
+//			x++;
+//		}
+//		else {
+//			x--;
+//		}
+//		if (y < destY) {
+//			y++;
+//		}
+//		else {
+//			y--;
+//		}
+//	}
+>>>>>>> Stashed changes
 }
