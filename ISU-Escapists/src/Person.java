@@ -70,11 +70,12 @@ abstract public class Person {
 		System.out.println(path);
 	}
 
-	public List<int[]> findPath(int[][] grid, int[] start, int[] goal) {
+	public List<int[]> findPath(int[][] map, int[] start, int[] goal) {
+		int[][] grid = map.clone();
 		int[]dx = {0, 1, 0, -1}; // Directions: Right, Down, Left Up
 		int[]dy = {1, 0, -1, 0};
 		int rows = grid.length;
-		int cols = grid.length;
+		int cols = grid[0].length;
 		
 		Queue <int[]> queue = new LinkedList<>();
 		queue.add(start);
@@ -88,7 +89,7 @@ abstract public class Person {
 				while(grid[cx][cy] != -1) {
 					path.add(new int[] {cx,cy});
 					int temp = grid[cx][cy];
-					cx = temp / cols;
+					cx = (int) temp / cols;
 					cy = temp % cols;
 				}
 				path.add(start);
