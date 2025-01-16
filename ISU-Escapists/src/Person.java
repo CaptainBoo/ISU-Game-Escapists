@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.Queue;
 
 abstract public class Person {
 
@@ -67,69 +68,67 @@ abstract public class Person {
 		currentlyPathfinding = true;
 		
 		List<int[]> path = findPath(grid, new int[]{x/29,y/29}, new int[]{destX/29,destY/29});
-		System.out.println(path);
-	}
-
-	public List<int[]> findPath(int[][] map, int[] start, int[] goal) {
-		int[][] grid = map.clone();
-		int[]dx = {0, 1, 0, -1}; // Directions: Right, Down, Left Up
-		int[]dy = {1, 0, -1, 0};
-		int rows = grid.length;
-		int cols = grid[0].length;
-		
-		Queue <int[]> queue = new LinkedList<>();
-		queue.add(start);
-		
-		while(!queue.isEmpty()) {
-			int[] currentPos = queue.poll();
-			int cx = currentPos[0], cy = currentPos[1];
-			
-			if (cx == goal[0] && cy == goal[1]) {
-				List<int[]> path = new ArrayList<>();
-				while(grid[cx][cy] != -1) {
-					path.add(new int[] {cx,cy});
-					int temp = grid[cx][cy];
-					cx = (int) temp / cols;
-					cy = temp % cols;
-				}
-				path.add(start);
-				Collections.reverse(path);
-				return path;
-			}
-			
-			for (int i = 0; i < 4; i++) {
-				int nx = cx + dx[i];
-				int ny = cy + dy[i];
-				if (nx >= 0 && ny >= 0 && nx < rows && ny < cols && grid[nx][ny] == 0) {
-					grid[nx][ny] = cx * cols + cy; // Store the parent info directly in the grid
-					queue.add(new int[] {nx, ny});
-				}
-			}
+		for (int i = 0; i < path.size(); i++) {
+			System.out.println(Arrays.toString(path.get(i)));
 		}
-		return Collections.emptyList();
-		
+	}
 	
-		
-//		if (!currentlyPathfinding) {
-//			findRandomPoint(1000, 1000);
-//		}
-//		
-//		if (Math.hypot(x-destX, y-destY) < 5) {
-//			currentlyPathfinding = false;
-//			return;
-//		}
-//		
-//		if (x < destX) {
-//			x++;
-//		}
-//		else {
-//			x--;
-//		}
-//		if (y < destY) {
-//			y++;
-//		}
-//		else {
-//			y--;
-//		}
+	public static List<int[]> findPath(int[][] map, int[] start, int[] goal) {
+	    int rows = map.length;
+	    int cols = map[0].length;
+	    // Directions: Down, Right, Up, Left
+	    int[] dx = {0, 1, 0, -1};
+	    int[] dy = {1, 0, -1, 0};
+
+	    boolean[][] visited = new boolean[rows][cols];
+	    int[][] parent = new int[rows][cols]; 
+	    
+	    for (int i = 0; i < parent.length; i++) {
+	    	for (int j = 0; j < parent[0].length; j++) {
+	    		parent[i][j] = -1;
+	    	}
+	    }
+
+	    Queue<int[]> queue = new LinkedList<>();
+	    queue.add(start);
+	    visited[start[0]][start[1]] = true;
+
+	    while (!queue.isEmpty()) {
+	        int[] current = queue.poll();
+	        int cx = current[0], cy = current[1];
+
+	        if (cx == goal[0] && cy == goal[1]) {
+	            List<int[]> path = new ArrayList<>();
+	            while (parent[cx][cy] != -1) {
+	                path.add(new int[]{cx, cy});
+	                int temp = parent[cx][cy];
+	                cx = temp / cols;
+	                cy = temp % cols;
+	            }
+	            path.add(start);
+	            Collections.reverse(path);
+
+	            // Convert path to movement directions
+	            List<int[]> directions = new ArrayList<>();
+	            for (int i = 1; i < path.size(); i++) {
+	                int[] prev = path.get(i - 1);
+	                int[] curr = path.get(i);
+	                directions.add(new int[]{curr[0] - prev[0], curr[1] - prev[1]});
+	            }
+	            return directions;
+	        }
+
+	        for (int i = 0; i < 4; i++) {
+	            int nx = cx + dx[i];
+	            int ny = cy + dy[i];
+	            if (nx >= 0 && ny >= 0 && nx < rows && ny < cols && !visited[nx][ny] && map[nx][ny] == 0) {
+	                visited[nx][ny] = true;
+	                parent[nx][ny] = cx * cols + cy; // Encode parent as an integer
+	                queue.add(new int[]{nx, ny});
+	            }
+	        }
+	    }
+
+	    return Collections.emptyList();
 	}
 }
