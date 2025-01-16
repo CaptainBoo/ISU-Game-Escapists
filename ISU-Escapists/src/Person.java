@@ -62,6 +62,7 @@ abstract public class Person {
 	}
 
 	public void movement(int[][]grid, int mapLength, int mapWidth) {
+
 		destX = (int) (Math.random() * mapLength + 1);
 		destY = (int) (Math.random() * mapWidth + 1);
 		System.out.println("Point is " + destX + " " + destY);

@@ -13,6 +13,7 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class TheEscapists extends JPanel implements Runnable, KeyListener, MouseListener, MouseMotionListener {
+	
 	int frame = 0;
 	Graphics offScreenBuffer;
 	Image offScreenImage;
@@ -32,15 +33,15 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	Prisoner[] prisoners;
 
 	public TheEscapists () {
-
+		//Make my class instances
+		map = new Map();
+				
 		//Set up Panel and thread
 		setPreferredSize(new Dimension(1472, 832));
 		setLocation(100, 100);
 		thread = new Thread(this);
 		thread.start();
 		
-		//Make my class instances
-		map = new Map();
 		
 	}
 
@@ -68,13 +69,13 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		g.drawImage (images[1],500,700, 30, 30,this);
 
 		
-		g.drawImage(playerFrames[0], player.getX(), player.getY(),40,90, this);
+		g.drawImage(playerFrames[0], 736, 416,40,90, this);
 		
 		for (int i = 0; i < prisoners.length; i++) {
 			g.drawImage(playerFrames[0], prisoners[i].getX() - map.getX(), prisoners[i].getY() - map.getY(), prisoners[i].getHitbox().width, prisoners[i].getHitbox().height, this);
+	
 		}
 	}
-
 	public void initialize() {
 		
 		images = new Image[5];
@@ -92,16 +93,19 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	}
 	
 	public void move() {
-		
-		if (left) {
-			map.move("left");
-		}if (right) {
-			map.move("right");
-		}if (down) {
-			map.move("down");
-		}if (up) {
-			map.move("up");
-		}repaint();
+		if (player.isCollision(map,up,down,left,right)) {
+			if (left) {
+				map.move("left");
+			}if (right) {
+				map.move("right");
+			}if (down) {
+				map.move("down");
+			}if (up) {
+				map.move("up");
+			}repaint();
+		}else {
+			//System.out.println("ran");
+		}
 	}
 
 	public void update() {
@@ -132,8 +136,17 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	public void mouseClicked(MouseEvent e) {
 	}
 	public void mousePressed(MouseEvent e) {
-		System.out.println(e.getX());
-		System.out.println(e.getY());
+		PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+		int mouseX = pointerInfo.getLocation().x;
+		int mouseY = pointerInfo.getLocation().y;
+		int arrRow = (int)Math.round((mouseY-115)/29.1818)+1;
+		int arrCol = (int)Math.round((mouseX-10)/29.1818);
+		int worldRow = (int)Math.round((player.getY()+map.getY())/50);
+		int worldCol = (int)Math.round((player.getX()+map.getX()-10)/50);
+		int[] returnArr = {arrRow,arrCol};
+		System.out.println(mouseY + " " + mouseX);
+		System.out.println(arrRow + " " + arrCol);
+		System.out.println(worldRow + " " + worldCol);
 	}
 	public void mouseReleased(MouseEvent e) {
 	}
