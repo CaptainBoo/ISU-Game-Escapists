@@ -65,7 +65,7 @@ abstract public class Person {
 
 		destX = (int) (Math.random() * mapLength + 1);
 		destY = (int) (Math.random() * mapWidth + 1);
-		System.out.println("Point is " + destX + " " + destY);
+//		System.out.println("Point is " + destX + " " + destY);
 		currentlyPathfinding = true;
 		
 		List<int[]> path = findPath(grid, new int[]{x/29,y/29}, new int[]{destX/29,destY/29});

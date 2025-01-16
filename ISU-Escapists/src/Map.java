@@ -25,6 +25,7 @@ public class Map {
 		}
 		xCord = 3000;
 		yCord = 2000;
+		System.out.println(Arrays.deepToString(mapArr));
 	}
 	
 	public int getX() {
