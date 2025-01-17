@@ -79,9 +79,9 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	public void initialize() {
 		
 		images = new Image[5];
-		prisoners = new Prisoner[2];
+		prisoners = new Prisoner[1];
 		prisoners[0] = new Prisoner("John");
-		prisoners[1] = new Prisoner("Eric");
+//		prisoners[1] = new Prisoner("Eric");
 //		prisoners[1].movement(map.getMapArr(), frame, FPS);
 		
 		images [0]= Toolkit.getDefaultToolkit().getImage("flimsy_pickaxe.png");
@@ -113,7 +113,6 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		for (Prisoner prisoner : prisoners) {
 			prisoner.movement(map.getMapArr());
 		}
-		
 	}
 
 	public void run() {
