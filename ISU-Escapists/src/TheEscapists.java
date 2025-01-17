@@ -111,7 +111,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 
 	public void update() {
 		for (Prisoner prisoner : prisoners) {
-			prisoner.movement(map.getMapArr(), frame, FPS);
+			prisoner.movement(map.getMapArr());
 		}
 		
 	}

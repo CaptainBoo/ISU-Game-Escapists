@@ -61,14 +61,15 @@ abstract public class Person {
 		return frameIndex;
 	}
 
-	public void movement(int[][]grid, int mapLength, int mapWidth) {
+	public void movement(int[][]grid) {
 
-		destX = (int) (Math.random() * mapLength + 1);
-		destY = (int) (Math.random() * mapWidth + 1);
-//		System.out.println("Point is " + destX + " " + destY);
+		destX = (int) (Math.random() * grid.length + 1);
+		destY = (int) (Math.random() * grid[0].length + 1);
 		currentlyPathfinding = true;
 		
-		List<int[]> path = findPath(grid, new int[]{x/29,y/29}, new int[]{destX/29,destY/29});
+		System.out.println("current position is " + x/29 + " " + y/29);
+		System.out.println("destination is " + destX + " " + destY);
+		List<int[]> path = findPath(grid, new int[]{x/29,y/29}, new int[]{destX, destY});
 		for (int i = 0; i < path.size(); i++) {
 			System.out.println(Arrays.toString(path.get(i)));
 		}
