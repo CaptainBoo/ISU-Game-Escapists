@@ -111,8 +111,11 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 
 	public void update() {
 		for (Prisoner prisoner : prisoners) {
-			prisoner.movement(map.getMapArr());
+			prisoner.movement(map.getMapArr(), map);
+
 		}
+//		Thread prisoner = new Thread(new Prisoner("test"));
+//		prisoner.start();
 	}
 
 	public void run() {
@@ -124,7 +127,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 			this.repaint();
 			
 			move();
-			
+
 			try {
 				Thread.sleep(1000/FPS);
 			}catch(Exception e) {
