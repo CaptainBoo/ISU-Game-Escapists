@@ -3,7 +3,7 @@ import java.util.*;
 import java.util.List;
 import java.util.Queue;
 
-abstract public class Person{
+abstract public class Person {
 
 	private int step = 0;
 	protected List<int[]> path;
@@ -21,10 +21,10 @@ abstract public class Person{
 
 	// Directions for pathfinding and movement
 	// Directions: Down, Right, Up, Left
-	private static int[] dx = {0, 1, 0, -1};
-	private static int[] dy = {1, 0, -1, 0};
+	private static int[] dx = { 0, 1, 0, -1 };
+	private static int[] dy = { 1, 0, -1, 0 };
 
-	public Person (String name) {
+	public Person(String name) {
 		this.name = name;
 		this.health = 100;
 		this.hitbox = new Rectangle(40, 90);
@@ -68,33 +68,33 @@ abstract public class Person{
 		return frameIndex;
 	}
 
-	public void movement(int[][]grid, Map map) {
+	public void movement(int[][] grid, Map map) {
 		int row = 0, col = 0;
-		col = (int) Math.round((x)/50);
-		row = (int) Math.round((y)/50);
+		col = (int) Math.round((x) / 50);
+		row = (int) Math.round((y) / 50);
 		int size = 0;
 		if (!currentlyPathfinding) {
 			destX = (int) (Math.random() * grid.length + 1);
 			destY = (int) (Math.random() * grid[0].length + 1);
 			System.out.println("Destination is " + destX + " " + destY);
-			
-			path = findPath(grid, new int[]{col,row}, new int[]{destX,destY});
+
+			path = findPath(grid, new int[] { col, row }, new int[] { destX, destY });
 			size = path.size();
 			currentlyPathfinding = true;
 		}
 
-		//		for (int i = 0; i < size; i++) {
-		
+		// for (int i = 0; i < size; i++) {
+
 		if (step == 0) {
 			int[] nextMove = path.remove(0);
 			if (nextMove[0] == 0 && nextMove[1] == 1) {
 				System.out.println("move down");
 				dir = 0;
-			} else if (nextMove[0] == 1 && nextMove[1] == 0){
+			} else if (nextMove[0] == 1 && nextMove[1] == 0) {
 				System.out.println("move right");
 				dir = 1;
 			} else if (nextMove[0] == 0 && nextMove[1] == -1) {
-				System.out.println("move up"); 
+				System.out.println("move up");
 				dir = 2;
 			} else if (nextMove[0] == -1 && nextMove[1] == 0) {
 				System.out.println("move left");
@@ -102,8 +102,8 @@ abstract public class Person{
 			}
 		}
 
-		//for (int step = 0; step < 29; step++) {
-		//System.out.println("dir is " + dir);
+		// for (int step = 0; step < 29; step++) {
+		// System.out.println("dir is " + dir);
 		if (dir == 0) {
 			y++;
 		} else if (dir == 1) {
@@ -113,14 +113,15 @@ abstract public class Person{
 		} else if (dir == 3) {
 			x--;
 		}
-		step ++;
+		step++;
 		if (step == 50) {
-			System.out.println("Currently at " + col + " " + row );
+			System.out.println("Currently at " + col + " " + row);
 			step = 0;
 		}
-		//}
-		//	}
-		if (path.isEmpty())currentlyPathfinding = false;
+		// }
+		// }
+		if (path.isEmpty())
+			currentlyPathfinding = false;
 	}
 
 	public static ArrayList<int[]> findPath(int[][] map, int[] start, int[] goal) {
@@ -128,7 +129,7 @@ abstract public class Person{
 		int cols = map[0].length;
 
 		boolean[][] visited = new boolean[rows][cols];
-		int[][] parent = new int[rows][cols]; 
+		int[][] parent = new int[rows][cols];
 
 		for (int i = 0; i < parent.length; i++) {
 			for (int j = 0; j < parent[0].length; j++) {

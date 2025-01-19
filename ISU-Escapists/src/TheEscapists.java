@@ -56,7 +56,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 			heat.open();
 		} catch (Exception e) {
 			System.err.println("Error loading main menu sound: " + e.getMessage());
-		    e.printStackTrace();
+			e.printStackTrace();
 		}
 
 		mainMenu.start();
@@ -93,7 +93,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 
 			}
 		}
-		
+
 	}
 
 	public void initialize() {
@@ -142,7 +142,6 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	public void run() {
 		initialize();
 		while (true) {
-			frame++;
 
 			update();
 			this.repaint();
