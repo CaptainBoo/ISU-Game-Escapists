@@ -123,7 +123,7 @@ abstract public class Person{
 		if (path.isEmpty())currentlyPathfinding = false;
 	}
 
-	public static List<int[]> findPath(int[][] map, int[] start, int[] goal) {
+	public static ArrayList<int[]> findPath(int[][] map, int[] start, int[] goal) {
 		int rows = map.length;
 		int cols = map[0].length;
 
@@ -156,7 +156,7 @@ abstract public class Person{
 				Collections.reverse(path);
 
 				// Convert path to movement directions
-				List<int[]> directions = new ArrayList<>();
+				ArrayList<int[]> directions = new ArrayList<>();
 				for (int i = 1; i < path.size(); i++) {
 					int[] prev = path.get(i - 1);
 					int[] curr = path.get(i);
@@ -176,6 +176,6 @@ abstract public class Person{
 			}
 		}
 
-		return Collections.emptyList();
+		return new ArrayList<>(Collections.emptyList());
 	}
 }

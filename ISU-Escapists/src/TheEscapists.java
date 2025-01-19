@@ -14,7 +14,6 @@ import javax.swing.*;
 @SuppressWarnings("serial")
 public class TheEscapists extends JPanel implements Runnable, KeyListener, MouseListener, MouseMotionListener {
 
-	int frame = 0;
 	Graphics offScreenBuffer;
 	Image offScreenImage;
 	int FPS = 60;
@@ -46,16 +45,18 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		thread.start();
 
 		try {
-			AudioInputStream sound = AudioSystem.getAudioInputStream(new File("sounds/Main Menu.mp3"));
+			AudioInputStream sound = AudioSystem.getAudioInputStream(new File("sounds/Main Menu.wav"));
 			mainMenu = AudioSystem.getClip();
 			mainMenu.open(sound);
-			sound = AudioSystem.getAudioInputStream(new File("sounds/Center Perks 2.0 - Free Time (0 Stars).mp3"));
+			sound = AudioSystem.getAudioInputStream(new File("sounds/Center Perks 2.0 - Free Time (0 Stars).wav"));
 			ambient = AudioSystem.getClip();
 			ambient.open(sound);
-			sound = AudioSystem.getAudioInputStream(new File("sounds/Center Perks 2.0 - Roll Call (5 Stars).mp3"));
+			sound = AudioSystem.getAudioInputStream(new File("sounds/Center Perks 2.0 - Roll Call (5 Stars).wav"));
 			heat = AudioSystem.getClip();
 			heat.open();
 		} catch (Exception e) {
+			System.err.println("Error loading main menu sound: " + e.getMessage());
+		    e.printStackTrace();
 		}
 
 		mainMenu.start();
@@ -78,18 +79,21 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 //		offScreenBuffer.fillRect(110, 110, 90, 90);
 //		g.drawImage(offScreenImage, 0, 0, this);
 
-		g.drawImage(map.getImage(), -map.getX(), -map.getY(), this);
+		if (screen == 1) {
+			g.drawImage(map.getImage(), -map.getX(), -map.getY(), this);
 
-		g.drawImage(images[0], 200, 100, 200, 200, this);
-		g.drawImage(images[1], 500, 700, 30, 30, this);
+			g.drawImage(images[0], 200, 100, 200, 200, this);
+			g.drawImage(images[1], 500, 700, 30, 30, this);
 
-		g.drawImage(playerFrames[0], 736, 416, 40, 90, this);
+			g.drawImage(playerFrames[0], 736, 416, 40, 90, this);
 
-		for (int i = 0; i < prisoners.length; i++) {
-			g.drawImage(playerFrames[0], prisoners[i].getX() - map.getX(), prisoners[i].getY() - map.getY(),
-					prisoners[i].getHitbox().width, prisoners[i].getHitbox().height, this);
+			for (int i = 0; i < prisoners.length; i++) {
+				g.drawImage(playerFrames[0], prisoners[i].getX() - map.getX(), prisoners[i].getY() - map.getY(),
+						prisoners[i].getHitbox().width, prisoners[i].getHitbox().height, this);
 
+			}
 		}
+		
 	}
 
 	public void initialize() {
