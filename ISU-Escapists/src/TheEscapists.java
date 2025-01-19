@@ -24,15 +24,19 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 
 	Set<Integer> keys = new HashSet<Integer>();
 
-	Image[] images;
-	Image[] playerFrames;
+	Item[] items;
+	
+	Image[] prisonerFrames;
+	Image[] guardFrames;
 
 	Player player = new Player();
 
 	Prisoner[] prisoners;
+	Guard[] guards;
 
 	Clip mainMenu, ambient, heat;
 	int screen = 0; // 0 = main menu, 1 = game, 2 = credits
+	int previousScreen = -1;
 
 	public TheEscapists() {
 		// Make my class instances
@@ -43,23 +47,6 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		setLocation(100, 100);
 		thread = new Thread(this);
 		thread.start();
-
-		try {
-			AudioInputStream sound = AudioSystem.getAudioInputStream(new File("sounds/Main Menu.wav"));
-			mainMenu = AudioSystem.getClip();
-			mainMenu.open(sound);
-			sound = AudioSystem.getAudioInputStream(new File("sounds/Center Perks 2.0 - Free Time (0 Stars).wav"));
-			ambient = AudioSystem.getClip();
-			ambient.open(sound);
-			sound = AudioSystem.getAudioInputStream(new File("sounds/Center Perks 2.0 - Roll Call (5 Stars).wav"));
-			heat = AudioSystem.getClip();
-			heat.open();
-		} catch (Exception e) {
-			System.err.println("Error loading main menu sound: " + e.getMessage());
-			e.printStackTrace();
-		}
-
-		mainMenu.start();
 	}
 
 	public void paintComponent(Graphics graphic) {
@@ -82,15 +69,20 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		if (screen == 1) {
 			g.drawImage(map.getImage(), -map.getX(), -map.getY(), this);
 
-			g.drawImage(images[0], 200, 100, 200, 200, this);
-			g.drawImage(images[1], 500, 700, 30, 30, this);
+//			g.drawImage(itemImages[0], 200, 100, 200, 200, this);
+//			g.drawImage(itemImages[1], 500, 700, 30, 30, this);
 
-			g.drawImage(playerFrames[0], 736, 416, 40, 90, this);
+			g.drawImage(prisonerFrames[0], 736, 416, 40, 90, this);
 
 			for (int i = 0; i < prisoners.length; i++) {
-				g.drawImage(playerFrames[0], prisoners[i].getX() - map.getX(), prisoners[i].getY() - map.getY(),
+				g.drawImage(prisonerFrames[0], prisoners[i].getX() - map.getX(), prisoners[i].getY() - map.getY(),
 						prisoners[i].getHitbox().width, prisoners[i].getHitbox().height, this);
 
+			}
+			
+			// Inventory
+			for (int i = 0; i < player.getInventory().length; i++) {
+				
 			}
 		}
 
@@ -98,18 +90,45 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 
 	public void initialize() {
 
-		images = new Image[5];
-		prisoners = new Prisoner[1];
-		prisoners[0] = new Prisoner("John");
-//		prisoners[1] = new Prisoner("Eric");
-//		prisoners[1].movement(map.getMapArr(), frame, FPS);
+		items = new Item[12];
+		items[0] = new Item("comb", Toolkit.getDefaultToolkit().getImage("comb.png"));
+		items[1] = new Item("contraband_pouch", Toolkit.getDefaultToolkit().getImage("contraband_pouch.png"));
+		items[2] = new Item("crowbar", Toolkit.getDefaultToolkit().getImage("crowbar.png"));
+		items[3] = new Item("duct_tape", Toolkit.getDefaultToolkit().getImage("duct_tape.png"));
+		items[4] = new Item("flimsy_pickaxe", Toolkit.getDefaultToolkit().getImage("flimsy_pickaxe.png"));
+		items[5] = new Item("foil", Toolkit.getDefaultToolkit().getImage("foil.png"));
+		items[6] = new Item("inmate_outfit", Toolkit.getDefaultToolkit().getImage("inmate_outfit.png"));
+		items[7] = new Item("jar_of_ink", Toolkit.getDefaultToolkit().getImage("jar_of_ink.png"));
+		items[8] = new Item("lighter", Toolkit.getDefaultToolkit().getImage("lighter.png"));
+		items[9] = new Item("molten_plastic", Toolkit.getDefaultToolkit().getImage("molten_plastic.png"));
+		items[10] = new Item("red_key", Toolkit.getDefaultToolkit().getImage("red_key.png"));
+		items[11] = new Item("tool_handle", Toolkit.getDefaultToolkit().getImage("tool_handle.png"));
+		
+		prisonerFrames = new Image[1];
+		prisonerFrames[0] = Toolkit.getDefaultToolkit().getImage("escapists_character_temp.png");
+		
+		prisoners = new Prisoner[2];
+		prisoners[0] = new Prisoner("Prisoner 1");
+		prisoners[1] = new Prisoner("Prisoner 2");
 
-		images[0] = Toolkit.getDefaultToolkit().getImage("flimsy_pickaxe.png");
-		Image character0 = Toolkit.getDefaultToolkit().getImage("escapists_character_temp.png");
+		guards = new Guard[1];
+		guards[0] = new Guard("Guard 1");
+		
 
-		playerFrames = new Image[1];
-		playerFrames[0] = character0;
-
+		try {
+			AudioInputStream sound = AudioSystem.getAudioInputStream(new File("sounds/Main Menu.wav"));
+			mainMenu = AudioSystem.getClip();
+			mainMenu.open(sound);
+			sound = AudioSystem.getAudioInputStream(new File("sounds/Center Perks 2.0 - Free Time (0 Stars).wav"));
+			ambient = AudioSystem.getClip();
+			ambient.open(sound);
+			sound = AudioSystem.getAudioInputStream(new File("sounds/Center Perks 2.0 - Roll Call (5 Stars).wav"));
+			heat = AudioSystem.getClip();
+			heat.open(sound);
+		} catch (Exception e) {
+			System.err.println("Error loading main menu sound: " + e.getMessage());
+			e.printStackTrace();
+		}
 	}
 
 	public void move() {
@@ -127,15 +146,12 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 				map.move("up");
 			}
 			repaint();
-		} else {
-			// System.out.println("ran");
 		}
 	}
 
 	public void update() {
 		for (Prisoner prisoner : prisoners) {
 			prisoner.movement(map.getMapArr(), map);
-
 		}
 	}
 
@@ -147,6 +163,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 			this.repaint();
 
 			move();
+			runSounds();
 
 			try {
 				Thread.sleep(1000 / FPS);
@@ -154,6 +171,29 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void runSounds() {
+		if (screen != previousScreen) {
+			stopAllSounds();
+			if (screen == 0) {
+				mainMenu.setFramePosition(0);
+				mainMenu.loop(Clip.LOOP_CONTINUOUSLY);
+			} else if (player.isHeat()) {
+				heat.setFramePosition(0);
+				heat.loop(Clip.LOOP_CONTINUOUSLY);
+			} else if (screen == 1){
+				ambient.setFramePosition(0);
+				ambient.loop(Clip.LOOP_CONTINUOUSLY);
+			} 
+		}
+		previousScreen = screen;	
+	}
+	
+	public void stopAllSounds() {
+		if (mainMenu.isRunning()) mainMenu.stop();
+		if (ambient.isRunning()) ambient.stop();
+		if (heat.isRunning()) heat.stop();
 	}
 
 	public void mouseClicked(MouseEvent e) {
@@ -222,6 +262,13 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 			down = true;
 		}
 		repaint();
+		// 
+		if (key == KeyEvent.VK_SPACE) {
+			if (screen == 0)
+			screen++;
+			else 
+				screen--;
+		}
 	}
 
 	public void keyReleased(KeyEvent e) {

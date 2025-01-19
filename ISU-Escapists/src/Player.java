@@ -3,6 +3,8 @@ import java.awt.Image;
 public class Player extends Person {
 	private int worldX;
 	private int worldY;
+	
+	private boolean heat;
 
 	public Player() {
 		super("player");
@@ -14,7 +16,7 @@ public class Player extends Person {
 		// this);
 
 	}
-
+	
 	public boolean isCollision(Map map, boolean up, boolean down, boolean left, boolean right) {
 		int arrRow = 0, arrCol = 0;
 
@@ -38,6 +40,14 @@ public class Player extends Person {
 			return true;
 		}
 
+	}
+
+	public boolean isHeat() {
+		return heat;
+	}
+
+	public void setHeat(boolean heat) {
+		this.heat = heat;
 	}
 
 }

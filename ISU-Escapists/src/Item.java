@@ -1,6 +1,6 @@
 import java.awt.Image;
 
-public class Item {
+public class Item implements Comparable<Item> {
 	private String itemName;
 	private Image itemImage;
 
@@ -15,5 +15,9 @@ public class Item {
 
 	public Image getItemImage() {
 		return this.itemImage;
+	}
+
+	public int compareTo(Item o) {
+		return this.itemName.compareToIgnoreCase(o.itemName);
 	}
 }

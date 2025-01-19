@@ -5,15 +5,16 @@ import java.util.Queue;
 
 abstract public class Person {
 
-	private int step = 0;
-	protected List<int[]> path;
+	protected int step = 0;
+	protected List<int[]> path = new ArrayList<>();
 	private String name;
 	protected int health, x, y;
 	private Rectangle hitbox;
-	private int dir;
+	protected int dir;
 
-	private boolean currentlyPathfinding;
-	private int destX, destY;
+	protected boolean currentlyPathfinding;
+	protected int destX;
+	protected int destY;
 
 	protected int frameIndex;
 
@@ -72,38 +73,32 @@ abstract public class Person {
 		int row = 0, col = 0;
 		col = (int) Math.round((x) / 50);
 		row = (int) Math.round((y) / 50);
-		int size = 0;
+		int pathSize = 0;
 		if (!currentlyPathfinding) {
-			destX = (int) (Math.random() * grid.length + 1);
-			destY = (int) (Math.random() * grid[0].length + 1);
-			System.out.println("Destination is " + destX + " " + destY);
-
-			path = findPath(grid, new int[] { col, row }, new int[] { destX, destY });
-			size = path.size();
+			while (path.isEmpty()) {
+				destX = (int) (Math.random() * grid.length + 1);
+				destY = (int) (Math.random() * grid[0].length + 1);
+				path = findPath(grid, new int[] { col, row }, new int[] { destX, destY });
+				pathSize = path.size();
+			}
 			currentlyPathfinding = true;
 		}
 
-		// for (int i = 0; i < size; i++) {
+		// for (int i = 0; i < pathSize; i++) {
 
 		if (step == 0) {
 			int[] nextMove = path.remove(0);
 			if (nextMove[0] == 0 && nextMove[1] == 1) {
-				System.out.println("move down");
 				dir = 0;
 			} else if (nextMove[0] == 1 && nextMove[1] == 0) {
-				System.out.println("move right");
 				dir = 1;
 			} else if (nextMove[0] == 0 && nextMove[1] == -1) {
-				System.out.println("move up");
 				dir = 2;
 			} else if (nextMove[0] == -1 && nextMove[1] == 0) {
-				System.out.println("move left");
 				dir = 3;
 			}
 		}
-
-		// for (int step = 0; step < 29; step++) {
-		// System.out.println("dir is " + dir);
+		
 		if (dir == 0) {
 			y++;
 		} else if (dir == 1) {
@@ -115,11 +110,8 @@ abstract public class Person {
 		}
 		step++;
 		if (step == 50) {
-			System.out.println("Currently at " + col + " " + row);
 			step = 0;
 		}
-		// }
-		// }
 		if (path.isEmpty())
 			currentlyPathfinding = false;
 	}
