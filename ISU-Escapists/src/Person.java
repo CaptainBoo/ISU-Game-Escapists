@@ -30,8 +30,6 @@ abstract public class Person{
 		this.hitbox = new Rectangle(40, 90);
 		x = 3000;
 		y = 2000;
-
-
 	}
 
 	public int getX() {
@@ -149,7 +147,7 @@ abstract public class Person{
 			if (cx == goal[0] && cy == goal[1]) {
 				List<int[]> path = new ArrayList<>();
 				while (parent[cx][cy] != -1) {
-					path.add(new int[]{cx, cy});
+					path.add(new int[] { cx, cy });
 					int temp = parent[cx][cy];
 					cx = temp / cols;
 					cy = temp % cols;
@@ -162,7 +160,7 @@ abstract public class Person{
 				for (int i = 1; i < path.size(); i++) {
 					int[] prev = path.get(i - 1);
 					int[] curr = path.get(i);
-					directions.add(new int[]{curr[0] - prev[0], curr[1] - prev[1]});
+					directions.add(new int[] { curr[0] - prev[0], curr[1] - prev[1] });
 				}
 				return directions;
 			}
@@ -173,7 +171,7 @@ abstract public class Person{
 				if (nx >= 0 && ny >= 0 && nx < rows && ny < cols && !visited[nx][ny] && map[nx][ny] == 0) {
 					visited[nx][ny] = true;
 					parent[nx][ny] = cx * cols + cy; // Encode parent as an integer
-					queue.add(new int[]{nx, ny});
+					queue.add(new int[] { nx, ny });
 				}
 			}
 		}
