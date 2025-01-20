@@ -15,8 +15,9 @@ import javax.swing.*;
 public class TheEscapists extends JPanel implements Runnable, KeyListener, MouseListener, MouseMotionListener {
 
 	Graphics offScreenBuffer;
-	Image offScreenImage;
+	Image offScreenImage, startMenu;
 	int FPS = 60;
+	int frame = 0;
 	int mouseX, mouseY;
 	Thread thread;
 	Map map;
@@ -24,6 +25,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 
 	Set<Integer> keys = new HashSet<Integer>();
 
+	Image inventory;
 	Item[] items;
 	
 	Image[] prisonerFrames;
@@ -35,8 +37,8 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	Guard[] guards;
 
 	Clip mainMenu, ambient, heat;
-	int screen = 0; // 0 = main menu, 1 = game, 2 = credits
-	int previousScreen = -1;
+	int state = 0; // 0 = main menu, 1 = in game, 2 = heat (guard angry), 3 = instructions, 4 = credits
+	int previousState = -1;
 
 	public TheEscapists() {
 		// Make my class instances
@@ -66,7 +68,32 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 //		offScreenBuffer.fillRect(110, 110, 90, 90);
 //		g.drawImage(offScreenImage, 0, 0, this);
 
-		if (screen == 1) {
+		if (state == 0) {
+			g.drawImage(startMenu, 0, 0, 1472, 832, this);
+//			
+//			// Start button
+//			g.setColor(Color.BLACK);
+//			g.setStroke(new BasicStroke(10));
+//			g.drawRect(536, 620, 400, 150);
+//			g.setColor(Color.GRAY);
+//			g.fillRect(536, 620, 400, 150);
+//			
+//			// Instructions button
+//			g.setColor(Color.BLACK);
+//			g.setStroke(new BasicStroke(10));
+//			g.drawRect(100, 620, 400, 150);
+//			g.setColor(Color.GRAY);
+//			g.fillRect(100, 620, 400, 150);
+//			
+//			// Credits button
+//			g.setColor(Color.BLACK);
+//			g.setStroke(new BasicStroke(10));
+//			g.drawRect(972, 620, 400, 150);
+//			g.setColor(Color.GRAY);
+//			g.fillRect(972, 620, 400, 150);
+		}
+		
+		if (state == 1 || state == 2) {
 			g.drawImage(map.getImage(), -map.getX(), -map.getY(), this);
 
 //			g.drawImage(itemImages[0], 200, 100, 200, 200, this);
@@ -79,33 +106,43 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 						prisoners[i].getHitbox().width, prisoners[i].getHitbox().height, this);
 
 			}
+			g.drawImage(inventory, 140, 600, this);
 			
 			// Inventory
 			for (int i = 0; i < player.getInventory().length; i++) {
 				
 			}
+			
+			// Heat
+			g.setFont(new Font("CourierNew ", Font.BOLD, 40));
+			g.setColor(Color.WHITE);
+
+			g.drawString("Heat: " + player.getHeat(), 140, 550);
 		}
 
 	}
 
 	public void initialize() {
-
+		inventory = Toolkit.getDefaultToolkit().getImage("images/inventory.png");
+		
 		items = new Item[12];
-		items[0] = new Item("comb", Toolkit.getDefaultToolkit().getImage("comb.png"));
-		items[1] = new Item("contraband_pouch", Toolkit.getDefaultToolkit().getImage("contraband_pouch.png"));
-		items[2] = new Item("crowbar", Toolkit.getDefaultToolkit().getImage("crowbar.png"));
-		items[3] = new Item("duct_tape", Toolkit.getDefaultToolkit().getImage("duct_tape.png"));
-		items[4] = new Item("flimsy_pickaxe", Toolkit.getDefaultToolkit().getImage("flimsy_pickaxe.png"));
-		items[5] = new Item("foil", Toolkit.getDefaultToolkit().getImage("foil.png"));
-		items[6] = new Item("inmate_outfit", Toolkit.getDefaultToolkit().getImage("inmate_outfit.png"));
-		items[7] = new Item("jar_of_ink", Toolkit.getDefaultToolkit().getImage("jar_of_ink.png"));
-		items[8] = new Item("lighter", Toolkit.getDefaultToolkit().getImage("lighter.png"));
-		items[9] = new Item("molten_plastic", Toolkit.getDefaultToolkit().getImage("molten_plastic.png"));
-		items[10] = new Item("red_key", Toolkit.getDefaultToolkit().getImage("red_key.png"));
-		items[11] = new Item("tool_handle", Toolkit.getDefaultToolkit().getImage("tool_handle.png"));
+		items[0] = new Item("comb", Toolkit.getDefaultToolkit().getImage("images/comb.png"));
+		items[1] = new Item("contraband_pouch", Toolkit.getDefaultToolkit().getImage("images/contraband_pouch.png"));
+		items[2] = new Item("crowbar", Toolkit.getDefaultToolkit().getImage("images/crowbar.png"));
+		items[3] = new Item("duct_tape", Toolkit.getDefaultToolkit().getImage("images/duct_tape.png"));
+		items[4] = new Item("flimsy_pickaxe", Toolkit.getDefaultToolkit().getImage("images/flimsy_pickaxe.png"));
+		items[5] = new Item("foil", Toolkit.getDefaultToolkit().getImage("images/foil.png"));
+		items[6] = new Item("inmate_outfit", Toolkit.getDefaultToolkit().getImage("images/inmate_outfit.png"));
+		items[7] = new Item("jar_of_ink", Toolkit.getDefaultToolkit().getImage("images/jar_of_ink.png"));
+		items[8] = new Item("lighter", Toolkit.getDefaultToolkit().getImage("images/lighter.png"));
+		items[9] = new Item("molten_plastic", Toolkit.getDefaultToolkit().getImage("images/molten_plastic.png"));
+		items[10] = new Item("red_key", Toolkit.getDefaultToolkit().getImage("images/red_key.png"));
+		items[11] = new Item("tool_handle", Toolkit.getDefaultToolkit().getImage("images/tool_handle.png"));
 		
 		prisonerFrames = new Image[1];
-		prisonerFrames[0] = Toolkit.getDefaultToolkit().getImage("escapists_character_temp.png");
+		prisonerFrames[0] = Toolkit.getDefaultToolkit().getImage("images/escapists_character_temp.png");
+		
+		startMenu = Toolkit.getDefaultToolkit().getImage("images/main_menu.png");
 		
 		prisoners = new Prisoner[2];
 		prisoners[0] = new Prisoner("Prisoner 1");
@@ -151,14 +188,30 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 
 	public void update() {
 		for (Prisoner prisoner : prisoners) {
-			prisoner.movement(map.getMapArr(), map);
+			prisoner.randomMovement(map.getMapArr(), map);
+		}
+		for (Guard guard : guards) {
+			if (player.getHeat() >= 70) {
+				if (Math.hypot(guard.getX() - player.getX(), guard.getY() - guard.getX()) < 500) {
+					guard.chasePlayer(map.getMapArr(), map, player);
+				}
+			} else {
+				guard.randomMovement(map.getMapArr(), map);
+			}
+		}
+		if (frame % 60 == 0) player.setHeat(player.getHeat() - 1);
+		if (state == 1 && player.getHeat() >= 70) {
+			state = 2;
+		}
+		if (state == 2 && player.getHeat() < 70) {
+			state = 1;
 		}
 	}
 
 	public void run() {
 		initialize();
 		while (true) {
-
+			frame++;
 			update();
 			this.repaint();
 
@@ -174,20 +227,20 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	}
 	
 	public void runSounds() {
-		if (screen != previousScreen) {
+		if (state != previousState) {
 			stopAllSounds();
-			if (screen == 0) {
+			if (state == 0) {
 				mainMenu.setFramePosition(0);
 				mainMenu.loop(Clip.LOOP_CONTINUOUSLY);
-			} else if (player.isHeat()) {
+			} else if (state == 2) {
 				heat.setFramePosition(0);
 				heat.loop(Clip.LOOP_CONTINUOUSLY);
-			} else if (screen == 1){
+			} else if (state == 1){
 				ambient.setFramePosition(0);
 				ambient.loop(Clip.LOOP_CONTINUOUSLY);
 			} 
 		}
-		previousScreen = screen;	
+		previousState = state;	
 	}
 	
 	public void stopAllSounds() {
@@ -264,10 +317,10 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		repaint();
 		// 
 		if (key == KeyEvent.VK_SPACE) {
-			if (screen == 0)
-			screen++;
+			if (state == 0)
+			state++;
 			else 
-				screen--;
+				state--;
 		}
 	}
 

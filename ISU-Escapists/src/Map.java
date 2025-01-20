@@ -16,7 +16,7 @@ public class Map {
 		setCollisionSpaces();
 		BufferedImage image;
 		try {
-			image = ImageIO.read(new File("map7.png"));
+			image = ImageIO.read(new File("images/map7.png"));
 			int scaledWidth = image.getWidth() * 2; // Adjust the scale factor as needed
 			int scaledHeight = image.getHeight() * 2;
 			mapImg = image.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);

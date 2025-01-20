@@ -1,11 +1,11 @@
 
 public class Guard extends Person {
 
-	private boolean chasePlayer;
+	private boolean chasingPlayer;
 
 	public Guard(String name) {
 		super(name);
-		this.chasePlayer = false;
+		this.chasingPlayer = false;
 	}
 	
 	public void chasePlayer(int[][] grid, Map map, Player player) {

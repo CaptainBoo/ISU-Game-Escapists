@@ -4,16 +4,13 @@ public class Player extends Person {
 	private int worldX;
 	private int worldY;
 	
-	private boolean heat;
+	private int heat;
 
 	public Player() {
 		super("player");
-		// this.x = 3740;
-		// this.y = 2416;
 		this.x = 736;
 		this.y = 416;
-		// g.drawImage(playerFrames[0], this.x-map.getX(), this.y-map.getY(),40,90,
-		// this);
+		this.heat = 100;
 
 	}
 	
@@ -42,11 +39,11 @@ public class Player extends Person {
 
 	}
 
-	public boolean isHeat() {
+	public int getHeat() {
 		return heat;
 	}
 
-	public void setHeat(boolean heat) {
+	public void setHeat(int heat) {
 		this.heat = heat;
 	}
 

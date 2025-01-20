@@ -69,7 +69,7 @@ abstract public class Person {
 		return frameIndex;
 	}
 
-	public void movement(int[][] grid, Map map) {
+	public void randomMovement(int[][] grid, Map map) {
 		int row = 0, col = 0;
 		col = (int) Math.round((x) / 50);
 		row = (int) Math.round((y) / 50);
