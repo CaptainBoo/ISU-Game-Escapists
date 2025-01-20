@@ -20,7 +20,6 @@ public class Guard extends Person {
 			size = path.size();
 			currentlyPathfinding = true;
 		}
-		System.out.println("destination is " + playerX + " " + playerY);
 		if (!path.isEmpty() && step == 0) {
 			int[] nextMove = path.remove(0);
 			if (nextMove[0] == 0 && nextMove[1] == 1) {
