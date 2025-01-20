@@ -21,13 +21,14 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	int mouseX, mouseY;
 	Thread thread;
 	Map map;
-	boolean left,right,up,down, directionChanged, drawerOpened,lootChanged,crafting;
+	boolean left,right,up,down, directionChanged, drawerOpened,lootChanged,crafting,dontRefundItems;
 	Image[] images;
 	Player player;
 	int[] drawerCordsX = {425,544,653,772,891,1010,425,544,653,772,891,1010}; //356 +61
 	int[] drawerCordsY = {275,275,275,275,275,275,392,392,392,392,392,392};//363 -81
 	int[] inventoryCordsX = {150,265,380,495,605,715};
 	int[] craftingCordsX = {600,673,750};
+	int[] recipeCordsX = {440,520,595,690,670};
 	HashMap<String, String[]> allRecipes = new HashMap<>();
 	TreeMap<String, String[]> knownRecipes = new TreeMap<>();
 	//boolean left, right, up, down;
@@ -148,7 +149,19 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 				for (int i = 0; i < craftingItems.size(); i++) {
 					g.drawImage(craftingItems.get(i).getItemImage(),craftingCordsX[i],560,50,50,this);									
 				}
+				int itemCount = 0;
+				//Recipes
+				for (String key : knownRecipes.keySet()) {
+					for (int i = 7; i<items.length-1;i++) {
+						if (items[i].getItemName().equals(key)) {
+							g.drawImage(items[i].getItemImage(),recipeCordsX[itemCount],195,50,50,this);	
+							itemCount++;
+						}
+					}
+				}
 			}
+
+
 		}
 
 	}
@@ -198,18 +211,16 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		items[7] = new Item("contraband_pouch", Toolkit.getDefaultToolkit().getImage("images/contraband_pouch.png"));
 		items[8] = new Item("flimsy_pickaxe", Toolkit.getDefaultToolkit().getImage("images/flimsy_pickaxe.png"));
 		items[9] = new Item("molten_plastic", Toolkit.getDefaultToolkit().getImage("images/molten_plastic.png"));
-		items[10] = new Item("red_key", Toolkit.getDefaultToolkit().getImage("images/red_key.png"));
-		items[11] = new Item("tool_handle", Toolkit.getDefaultToolkit().getImage("images/tool_handle.png"));
-		items[12] = new Item("guard_outfit", Toolkit.getDefaultToolkit().getImage("images/guard_outfit.png"));
+		items[10] = new Item("tool_handle", Toolkit.getDefaultToolkit().getImage("images/tool_handle.png"));
+		items[11] = new Item("guard_outfit", Toolkit.getDefaultToolkit().getImage("images/guard_outfit.png"));
+		items[12] = new Item("red_key", Toolkit.getDefaultToolkit().getImage("images/red_key.png"));
 
-		String []tempArr = {"crowar", "duct_tape","tool_handle"};
-		allRecipes.put("flimsy_pickaxe", tempArr);
-		tempArr[0] = "foil";tempArr[1] = "foil";tempArr[2] = "duct_tape";
-		allRecipes.put("contraband_pouch", tempArr);
-		tempArr[0] = "comb"; tempArr[1] = "comb"; tempArr[2] = "comb";
-		allRecipes.put("molten_plastic", tempArr);
-		tempArr[0] = "jar_of_ink"; tempArr[1] = "jar_of_ink"; tempArr[2] = "inmate_outfit";
-		allRecipes.put("guard_outfit", tempArr);
+
+		 allRecipes.put("flimsy_pickaxe", new String[]{"crowbar", "duct_tape", "tool_handle"});
+        allRecipes.put("contraband_pouch", new String[]{"foil", "foil", "duct_tape"});
+        allRecipes.put("molten_plastic", new String[]{"comb", "comb", "lighter"});
+        allRecipes.put("guard_outfit", new String[]{"jar_of_ink", "jar_of_ink", "inmate_outfit"});
+        allRecipes.put("tool_handle", new String[]{"foil", "crowbar", "duct_tape"});
 
 		prisonerFrames = new Image[1];
 		prisonerFrames[0] = Toolkit.getDefaultToolkit().getImage("images/escapists_character_temp.png");
@@ -370,9 +381,14 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 
 
 	}
-	
+
+
 	public void handleCrafting() {
-		String[] compareArr = (String[]) craftingItems.toArray();
+		System.out.println("ran1");
+		String[] compareArr =new String[craftingItems.size()] ;
+		for (int i = 0; i < craftingItems.size(); i++) {
+			compareArr[i]= craftingItems.get(i).getItemName();
+		}
 		for (String key: allRecipes.keySet()) {
 			if (compareArr.length!= allRecipes.get(key).length) {
 				continue; 
@@ -380,9 +396,23 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 			Arrays.sort(compareArr);
 			String[] tempArr = allRecipes.get(key);
 			Arrays.sort(tempArr);
-			if (Arrays.equals(compareArr, tempArr)){
-				knownRecipes.put(key, allRecipes.get(key));
+			System.out.println("ran2");
+			for (int i = 0; i < 3;i++) {
+				System.out.println(tempArr[i] + " " + compareArr[i]);
 			}
+			if (Arrays.equals(compareArr, tempArr)){
+				System.out.println("ran3");
+				knownRecipes.put(key, allRecipes.get(key));
+				dontRefundItems=true;
+				for (int i = 7; i<items.length-1;i++) {
+					if (items[i].getItemName().equals(key)) {
+						player.getInventory().add(items[i]);
+					}
+				}
+			}
+			
+			
+
 		}
 	}
 
@@ -462,9 +492,9 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 					break;
 				}
 			}
-			if (square != -1 && square <= drawerLoot.size()) {
+			if (square != -1 && square <= drawerLoot.size() && player.getInventory().size()<6) {
 				player.getInventory().add(drawerLoot.remove(square-1));
-			}if (square2 != -1 && square2 <= player.getInventory().size()) {
+			}if (square2 != -1 && square2 <= player.getInventory().size() & drawerLoot.size() <12) {
 				drawerLoot.add(player.getInventory().remove(square2-1));
 			}
 
@@ -485,8 +515,10 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 			}if (square != -1 && square <= player.getInventory().size()) {
 				craftingItems.add(player.getInventory().remove(square-1));
 			}
-			
-			if (mouseX <= 776 && mouseX <= 959 && mouseY+50 >= 634 && mouseY+50 <= 675) {
+			System.out.println(mouseY+50);
+			System.out.println(mouseX >= 848 && mouseX <= 1031 && mouseY+50 >= 58250 && mouseY+50 <= 62150);
+			if (mouseX >= 848 && mouseX <= 1031 && mouseY+50 >= 629 && mouseY+50 <= 672) {
+
 				handleCrafting();
 			}
 		}
@@ -631,9 +663,16 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 			}
 		}if (key == KeyEvent.VK_Q) {
 			crafting = !crafting;
-			for (int i = craftingItems.size(); i > 0; i--) {
-				player.getInventory().add(craftingItems.remove(i));
+			System.out.println(dontRefundItems);
+			if (!dontRefundItems) {
+				for (int i = craftingItems.size()-1; i >= 0; i--) {
+					player.getInventory().add(craftingItems.remove(i));	
+				}
+			}else {
+				dontRefundItems=false;
 			}
+			craftingItems.clear();
+			
 		}
 
 	}
