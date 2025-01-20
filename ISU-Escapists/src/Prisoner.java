@@ -1,15 +1,16 @@
 import java.awt.Image;
 
-public class Prisoner extends Person{
-	private int characterFrame;
+
+public class Prisoner extends Person {
+
 	private int opinion;
-	
+
 	public Prisoner(String name,Image[] playerFrames) {
-		super(name, playerFrames);
+		super(name,playerFrames);
 		this.opinion = 40;
 		characterFrame = 0;
 	}
-	
+
 	public int getOpinion() {
 		return this.opinion;
 	}

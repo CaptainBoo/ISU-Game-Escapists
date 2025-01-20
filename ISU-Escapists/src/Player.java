@@ -3,7 +3,7 @@ import java.awt.Image;
 public class Player extends Person {
 	private int worldX;
 	private int worldY;
-	
+	private int heat;
 	private Item[] inventory = new Item[6];
 	//private int frame = 0;
 	public Player(Image[] playerFrames) {
@@ -20,7 +20,7 @@ public class Player extends Person {
 	public Item[] getInventory() {
 		return inventory;
 	}
-	public boolean isCollision(Map map,boolean up, boolean down, boolean left, boolean right,boolean twoDirectionLeft, boolean twoDirectionRight) {
+	public boolean isCollision(Map map,boolean up, boolean down, boolean left, boolean right) {
 		int arrRow=0,arrCol=0;
 
 		if (left) {
@@ -53,5 +53,12 @@ public class Player extends Person {
 		return true;
 	}
 	
+	public int getHeat() {
+		return heat;
+	}
 
+	public void setHeat(int heat) {
+		this.heat = heat;
+	}
+	
 }
