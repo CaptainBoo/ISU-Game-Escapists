@@ -25,7 +25,15 @@ abstract public class Person {
 	private static int[] dx = { 0, 1, 0, -1 };
 	private static int[] dy = { 1, 0, -1, 0 };
 
+<<<<<<< Updated upstream
 	public Person(String name) {
+=======
+	//Constructor for our person class. This is the parent of mutliple classes so it has the most 
+	//To intilize.
+	//Parameters: String name, Image[] playerFrames
+	//Return: None 
+	public Person(String name, Image[] playerFrames) {
+>>>>>>> Stashed changes
 		this.name = name;
 		this.health = 100;
 		this.hitbox = new Rectangle(40, 90);
@@ -70,10 +78,18 @@ abstract public class Person {
 		return frameIndex;
 	}
 
+<<<<<<< Updated upstream
 	public void randomMovement(int[][] grid, Map map) {
 		// Method for NPCs to idle and move around
 		// Parameters: 2-d array of map, and actual map object
 		// Returns void as position changes directly
+=======
+	//This is the random movement method that our npcs will use for path finding. It finds the shortest path to a point
+	//With a different method and then travels towards that point. However it doesn't check bounderies all that well.
+	//Parameter: int[][] grid, Map map, int frame.
+	//Return: Void
+	public void randomMovement(int[][] grid, Map map,int frame) {
+>>>>>>> Stashed changes
 		int row = 0, col = 0;
 		col = (int) Math.round((x) / 50);
 		row = (int) Math.round((y) / 50);
@@ -122,6 +138,10 @@ abstract public class Person {
 			currentlyPathfinding = false;
 	}
 
+	//This method calculates the shortest path to a random point by using breadth first search which is a 
+	//Algorithm for path findign using queues. Unfotuatelly it doesn't seem to be working
+	//Paramters: int[][] map, int[] start, int[] goal
+	//Return: ArrayList<> The list of moves needed to reach the point
 	public static ArrayList<int[]> findPath(int[][] map, int[] start, int[] goal) {
 		// A method to find the fastest path to a random point using BFS
 		// Parameters: The 2-d array of map, start position (x, y), and end position (x, y)
@@ -193,5 +213,25 @@ abstract public class Person {
 		}
 		// If no path found
 		return new ArrayList<>(Collections.emptyList());
+<<<<<<< Updated upstream
+=======
+		
+	}
+	
+	public Image[] getPlayerFrames() {
+		return this.playerFrames;
+	}
+	
+	public int getCharacterFrame() {
+		return this.characterFrame;
+	}
+	
+	//This is basically a setter
+	public void incrementCharacterFrame(int increment) {
+		this.characterFrame+= increment;
+	}
+	public void setCharacterFrame(int value) {
+		this.characterFrame = value;
+>>>>>>> Stashed changes
 	}
 }

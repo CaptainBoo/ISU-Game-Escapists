@@ -4,11 +4,23 @@ public class Guard extends Person {
 	private boolean chasingPlayer;
 	private int tilesMoved; // The guard will refresh path after 3 steps.
 
+<<<<<<< Updated upstream
 	public Guard(String name) {
 		super(name);
+=======
+	//Constructor for the guard class, inherits its playerFrames from its parent using the super constructor
+	//Parameters: String name, Image[] playerFrames;
+	//Return: None
+	public Guard(String name,Image[] playerFrames) {
+		super(name,playerFrames);
+>>>>>>> Stashed changes
 		this.chasingPlayer = false;
 	}
 	
+	//This method is if you have a heat above 70 meaning you have done something band and the guards will now aggro you. 
+	//They will path find towards you and if they touch you the game ends
+	//The path finding works and they go towards you however, they are slow and can go through walls which is not good
+	//Parameters: int[][] grid, Map map, Player player
 	public void chasePlayer(int[][] grid, Map map, Player player) {
 		// Method for guard to chase the player
 		// Parameters: 2-d array of map, actual map object, player object/
