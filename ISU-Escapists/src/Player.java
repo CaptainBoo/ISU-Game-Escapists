@@ -28,7 +28,7 @@ public class Player extends Person {
 			arrRow = (int)Math.round((this.y+map.getY())/50);
 			arrCol = (int)Math.round((this.x+map.getX()-35)/50);
 			if (map.getMapArr()[arrRow][arrCol] == 1) {
-				return false;
+				return false;	
 			}
 		}if (right) {
 			arrRow = (int)Math.round((this.y+map.getY())/50);

@@ -370,7 +370,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 				guard.randomMovement(map.getMapArr(), map);
 			}
 		}
-		if (frame % 60 == 0) player.setHeat(player.getHeat() - 1);
+		if (frame % 60 == 0 && player.getHeat() > 0) player.setHeat(player.getHeat() - 1);
 		if (state == 1 && player.getHeat() >= 70) {
 			state = 2;
 		}
