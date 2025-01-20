@@ -67,6 +67,7 @@ public class Player extends Person {
 			arrCol = (int)Math.round((this.x+map.getX()-35)/50);
 			if(!handleCollisions(map,arrRow,arrCol)) {
 				return false;
+
 			}
 		}if (right) {
 			arrRow = (int)Math.round((this.y+map.getY())/50);
