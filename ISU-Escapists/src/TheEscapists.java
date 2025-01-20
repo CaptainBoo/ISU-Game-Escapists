@@ -261,22 +261,22 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		int worldRow = (int) Math.round((player.getY() + map.getY()) / 50);
 		int worldCol = (int) Math.round((player.getX() + map.getX() - 10) / 50);
 		int[] returnArr = { arrRow, arrCol };
-		System.out.println(mouseY + " " + mouseX);
+		System.out.println(mouseX + " " + mouseY);
 		System.out.println(arrRow + " " + arrCol);
 		System.out.println(worldRow + " " + worldCol);
 
 		if (state == 0) {
-			if (mouseX >= 536 && mouseX <= 936 && mouseY >= 620 && mouseY <= 770) {
+			if (mouseX >= 564 && mouseX <= 972 && mouseY >= 640 && mouseY <= 810) {
 				state = 1;
 			}
-			else if (mouseX >= 100 && mouseX <= 500 && mouseY >= 620 && mouseY <= 770) {
+			else if (mouseX >= 130 && mouseX <= 536 && mouseY >= 640 && mouseY <= 810) {
 				state = 3;
 			}
-			else if (mouseX >= 972 && mouseX <= 1372 && mouseY >= 620 && mouseY <= 770) {
+			else if (mouseX >= 998 && mouseX <= 1410 && mouseY >= 640 && mouseY <= 810) {
 				state = 4;
 			}
 		} else if (state == 3 || state == 4) {
-			if ( mouseX >= 16 && mouseX <= 146 && mouseY >= 687 && mouseY <= 817) {
+			if ( mouseX >= 46 && mouseX <= 178 && mouseY >= 717 && mouseY <= 791) {
 				state = 0;
 			}
 		}
