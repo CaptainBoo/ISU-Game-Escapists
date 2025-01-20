@@ -74,7 +74,7 @@ abstract public class Person {
 		return frameIndex;
 	}
 
-	public void randomMovement(int[][] grid, Map map) {
+	public void randomMovement(int[][] grid, Map map,int frame) {
 		int row = 0, col = 0;
 		col = (int) Math.round((x) / 50);
 		row = (int) Math.round((y) / 50);
@@ -118,6 +118,30 @@ abstract public class Person {
 		step++;
 		if (step == 50) {
 			step = 0;
+		}
+		if (frame %10==0) {
+			if (dir == 0) {
+				characterFrame++;
+				if (characterFrame >=8) {
+					characterFrame -= 4;
+				}
+			}
+			else if (dir == 1) {
+				characterFrame++;
+				if (characterFrame >=16) {
+					characterFrame -= 4;
+				}
+			}else if (dir == 2) {
+				characterFrame++;
+				if (characterFrame >=4) {
+					characterFrame -=4;
+				}
+			}else if (dir == 3) {
+				characterFrame++;
+				if (characterFrame >= 12) {
+					characterFrame -=4;
+				}
+			}
 		}
 		if (path.isEmpty())
 			currentlyPathfinding = false;

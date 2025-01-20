@@ -209,6 +209,9 @@ public class Map {
 		}for (int i = 39; i <= 52; i++) {
 			mapArr[33][i] = 1;
 		}
+		for (int i = 67; i <= 91; i++) {
+			mapArr[111][i] = 1;
+		}
 		//Turning the doors into 0s
 		
 		//key:
@@ -225,11 +228,11 @@ public class Map {
 		9 are the drawers
 		//Dont ask why theres doors at 82 8
 		*/
-		mapArr[91][92] = 2;
+		mapArr[92][92] = 2;
 		mapArr[88][92] = 3;
 		mapArr[87][92] = 3;
 		mapArr[102][92] = 3;
-		mapArr[102][100] = 3;
+//		mapArr[102][100] = 3;
 		mapArr[111][86] = 3;
 		mapArr[105][66] = 4;
 		mapArr[106][66] = 4;

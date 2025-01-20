@@ -28,7 +28,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	int[] drawerCordsY = {275,275,275,275,275,275,392,392,392,392,392,392};//363 -81
 	int[] inventoryCordsX = {150,265,380,495,605,715};
 	int[] craftingCordsX = {600,673,750};
-	int[] recipeCordsX = {440,520,595,690,670};
+	int[] recipeCordsX = {440,520,595,690,750};
 	HashMap<String, String[]> allRecipes = new HashMap<>();
 	TreeMap<String, String[]> knownRecipes = new TreeMap<>();
 	//boolean left, right, up, down;
@@ -117,6 +117,11 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 						prisoners[i].getHitbox().width, prisoners[i].getHitbox().height, this);
 
 			}
+			for (int i = 0; i < guards.length; i++) {
+				g.drawImage(guards[i].getPlayerFrames()[0], guards[i].getX() - map.getX(), guards[i].getY() - map.getY(),
+						guards[i].getHitbox().width, guards[i].getHitbox().height, this);
+
+			}
 			g.drawImage(inventory, 140, 600, this);
 
 			// Inventory
@@ -200,20 +205,22 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	public void initialize() {
 		inventory = Toolkit.getDefaultToolkit().getImage("images/inventory.png");
 
-		items = new Item[13];
-		items[0] = new Item("comb", Toolkit.getDefaultToolkit().getImage("images/comb.png"));
-		items[1] = new Item("duct_tape", Toolkit.getDefaultToolkit().getImage("images/duct_tape.png"));
-		items[2] = new Item("crowbar", Toolkit.getDefaultToolkit().getImage("images/crowbar.png"));
-		items[3] = new Item("lighter", Toolkit.getDefaultToolkit().getImage("images/lighter.png"));
-		items[4] = new Item("foil", Toolkit.getDefaultToolkit().getImage("images/foil.png"));
-		items[5] = new Item("inmate_outfit", Toolkit.getDefaultToolkit().getImage("images/inmate_outfit.png"));
-		items[6] = new Item("jar_of_ink", Toolkit.getDefaultToolkit().getImage("images/jar_of_ink.png"));
-		items[7] = new Item("contraband_pouch", Toolkit.getDefaultToolkit().getImage("images/contraband_pouch.png"));
-		items[8] = new Item("flimsy_pickaxe", Toolkit.getDefaultToolkit().getImage("images/flimsy_pickaxe.png"));
-		items[9] = new Item("molten_plastic", Toolkit.getDefaultToolkit().getImage("images/molten_plastic.png"));
-		items[10] = new Item("tool_handle", Toolkit.getDefaultToolkit().getImage("images/tool_handle.png"));
-		items[11] = new Item("guard_outfit", Toolkit.getDefaultToolkit().getImage("images/guard_outfit.png"));
-		items[12] = new Item("red_key", Toolkit.getDefaultToolkit().getImage("images/red_key.png"));
+		items = new Item[15];
+		items[0] = new Item("comb", Toolkit.getDefaultToolkit().getImage("images/comb.png"),false);
+		items[1] = new Item("duct_tape", Toolkit.getDefaultToolkit().getImage("images/duct_tape.png"),true);
+		items[2] = new Item("crowbar", Toolkit.getDefaultToolkit().getImage("images/crowbar.png"),true);
+		items[3] = new Item("lighter", Toolkit.getDefaultToolkit().getImage("images/lighter.png"),false);
+		items[4] = new Item("foil", Toolkit.getDefaultToolkit().getImage("images/foil.png"),true);
+		items[5] = new Item("inmate_outfit", Toolkit.getDefaultToolkit().getImage("images/inmate_outfit.png"),false);
+		items[6] = new Item("jar_of_ink", Toolkit.getDefaultToolkit().getImage("images/jar_of_ink.png"),false);
+		items[7] = new Item("contraband_pouch", Toolkit.getDefaultToolkit().getImage("images/contraband_pouch.png"),false);
+		items[8] = new Item("flimsy_pickaxe", Toolkit.getDefaultToolkit().getImage("images/flimsy_pickaxe.png"),true);
+		items[9] = new Item("molten_plastic", Toolkit.getDefaultToolkit().getImage("images/molten_plastic.png"),true);
+		items[10] = new Item("tool_handle", Toolkit.getDefaultToolkit().getImage("images/tool_handle.png"),false);
+		items[11] = new Item("guard_outfit", Toolkit.getDefaultToolkit().getImage("images/guard_outfit.png"),true);
+		items[12] = new Item("red_key", Toolkit.getDefaultToolkit().getImage("images/red_key.png"),true);
+		items[13] = new Item("medic_outfit", Toolkit.getDefaultToolkit().getImage("images/medic_Outfit.png"),true);
+		items[14] = new Item("cyan_key",Toolkit.getDefaultToolkit().getImage("images/cyan_key.png"),true);
 
 
 		 allRecipes.put("flimsy_pickaxe", new String[]{"crowbar", "duct_tape", "tool_handle"});
@@ -254,15 +261,20 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		prisoners = new Prisoner[2];
 		Image[] playerFrames = new Image[16];
 		for (int i = 1; i <= 16; i++) {
-			playerFrames[i-1] = Toolkit.getDefaultToolkit().getImage("images/playerFrame" + i +".png");;
+			playerFrames[i-1] = Toolkit.getDefaultToolkit().getImage("images/playerFrame" + i +".png");
 		}
 		player = new Player(playerFrames);
 		prisoners = new Prisoner[2];
 		prisoners[0] = new Prisoner("Prisoner 1",playerFrames);
 		prisoners[1] = new Prisoner("Prisoner 2",playerFrames);
 
-		guards = new Guard[1];
-		guards[0] = new Guard("Guard 1", playerFrames);
+		//guards = new Guard[1];
+		Image[] guardFrames = new Image[1];
+		guardFrames[0] = Toolkit.getDefaultToolkit().getImage("images/Guard.png");
+		guards = new Guard[3];
+		guards[0] = new Guard("Guard1",guardFrames);
+		guards[1] = new Guard("Guard2",guardFrames);
+		guards[2] = new Guard("Guard3",guardFrames);
 
 
 		try {
@@ -303,12 +315,12 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 				if (player.getCharacterFrame() >=4) {
 					player.incrementCharacterFrame(-4);
 				}
-				for (int i = 0; i < prisoners.length;i++) {
-					prisoners[i].incrementCharacterFrame(1);
-					if (prisoners[i].getCharacterFrame() >=4) {
-						prisoners[i].incrementCharacterFrame(-4);
-					}
-				}
+//				for (int i = 0; i < prisoners.length;i++) {
+//					prisoners[i].incrementCharacterFrame(1);
+//					if (prisoners[i].getCharacterFrame() >=4) {
+//						prisoners[i].incrementCharacterFrame(-4);
+//					}
+//				}
 			}
 		}if (down) {
 			if (frame % 10 == 0) {
@@ -316,12 +328,12 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 				if (player.getCharacterFrame() >=8) {
 					player.incrementCharacterFrame(-4);
 				}
-				for (int i = 0; i < prisoners.length;i++) {
-					prisoners[i].incrementCharacterFrame(1);
-					if (prisoners[i].getCharacterFrame() >=8) {
-						prisoners[i].incrementCharacterFrame(-4);
-					}
-				}
+//				for (int i = 0; i < prisoners.length;i++) {
+//					prisoners[i].incrementCharacterFrame(1);
+//					if (prisoners[i].getCharacterFrame() >=8) {
+//						prisoners[i].incrementCharacterFrame(-4);
+//					}
+//				}
 			}
 		}if (left && !up && !down) {
 			if (frame % 10 == 0) {
@@ -329,12 +341,12 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 				if (player.getCharacterFrame() >=12) {
 					player.incrementCharacterFrame(-4);
 				}
-				for (int i = 0; i < prisoners.length;i++) {
-					prisoners[i].incrementCharacterFrame(1);
-					if (prisoners[i].getCharacterFrame() >=12) {
-						prisoners[i].incrementCharacterFrame(-4);
-					}
-				}
+//				for (int i = 0; i < prisoners.length;i++) {
+//					prisoners[i].incrementCharacterFrame(1);
+//					if (prisoners[i].getCharacterFrame() >=12) {
+//						prisoners[i].incrementCharacterFrame(-4);
+//					}
+//				}
 			}
 		}if (right && !up && !down) {
 			if (frame % 10 == 0) {
@@ -342,12 +354,12 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 				if (player.getCharacterFrame() >=16) {
 					player.incrementCharacterFrame(-4);
 				}
-				for (int i = 0; i < prisoners.length;i++) {
-					prisoners[i].incrementCharacterFrame(1);
-					if (prisoners[i].getCharacterFrame() >=16) {
-						prisoners[i].incrementCharacterFrame(-4);
-					}
-				}
+//				for (int i = 0; i < prisoners.length;i++) {
+//					prisoners[i].incrementCharacterFrame(1);
+//					if (prisoners[i].getCharacterFrame() >=16) {
+//						prisoners[i].incrementCharacterFrame(-4);
+//					}
+//				}
 			}
 
 		}
@@ -359,7 +371,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		frame++;
 		handleFrames();
 		for (Prisoner prisoner : prisoners) {
-			prisoner.randomMovement(map.getMapArr(), map);
+			prisoner.randomMovement(map.getMapArr(), map,frame);
 		}
 		for (Guard guard : guards) {
 			if (player.getHeat() >= 70) {
@@ -367,10 +379,12 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 					guard.chasePlayer(map.getMapArr(), map, player);
 				}
 			} else {
-				guard.randomMovement(map.getMapArr(), map);
+				guard.randomMovement(map.getMapArr(), map,frame);
 			}
 		}
-		if (frame % 60 == 0) player.setHeat(player.getHeat() - 1);
+		if (player.getHeat()>0) {
+			if (frame % 60 == 0) player.setHeat(player.getHeat() - 1);			
+		}
 		if (state == 1 && player.getHeat() >= 70) {
 			state = 2;
 		}
@@ -560,7 +574,6 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("The Escapists");
-
 		TheEscapists gamePanel = new TheEscapists();
 
 		frame.add(gamePanel);
@@ -646,7 +659,8 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		}if (key == KeyEvent.VK_E) {
 			if (drawerOpened) {
 				drawerOpened = false;
-				drawerLoot = generateLoot();
+				drawerLoot = generateLoot();					
+				
 			}else {
 				PointerInfo pointerInfo = MouseInfo.getPointerInfo();
 				int mouseX = pointerInfo.getLocation().x-74;
@@ -656,6 +670,24 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 				int playerRow = (int) Math.round((player.getY() + map.getY()) / 50);
 				int playerCol = (int) Math.round((player.getX() + map.getX() - 10) / 50);
 
+				if (mouseRow == 90 && mouseCol == 95 && Math.abs(playerRow-mouseRow) <= 2 && Math.abs(playerCol - mouseCol) <= 2) {
+					drawerOpened = true;
+					drawerLoot.clear();
+					drawerLoot.add(items[12]);
+				}
+				if ((mouseRow == 114 || mouseRow == 115) && (mouseCol== 85||mouseCol == 84) && Math.abs(playerRow-mouseRow) <= 2 && Math.abs(playerCol - mouseCol) <= 2) {
+					drawerOpened = true;
+					drawerLoot.clear();
+					drawerLoot.add(items[13]);
+				}
+				if (mouseRow == 23 && mouseCol == 110 && Math.abs(playerRow-mouseRow) <= 2 && Math.abs(playerCol - mouseCol) <= 2) {
+					drawerOpened = true;
+					drawerLoot.clear();
+					drawerLoot.add(items[14]);
+				}
+				if (mouseRow >= 106 && mouseRow <= 108 && mouseCol >= 71 && mouseCol <= 77) {
+					//win
+				}
 				System.out.println(mouseRow + " " + mouseCol);
 				if (map.getMapArr()[mouseRow][mouseCol] == 9 && Math.abs(playerRow-mouseRow) <= 2 && Math.abs(playerCol - mouseCol) <= 2) {
 					drawerOpened = true;

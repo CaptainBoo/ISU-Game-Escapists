@@ -8,9 +8,12 @@ public class Guard extends Person {
 	public Guard(String name,Image[] playerFrames) {
 		super(name,playerFrames);
 		this.chasingPlayer = false;
+		x = 2700;
+		y = 2100;
 	}
 	
 	public void chasePlayer(int[][] grid, Map map, Player player) {
+		System.out.println("chasing");
 		int col = (int) Math.round((x) / 50);
 		int row = (int) Math.round((y) / 50);
 		int playerX = (int) Math.round((player.getX()) / 50);
