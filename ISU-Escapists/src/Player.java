@@ -4,8 +4,10 @@ public class Player extends Person {
 	private int worldX;
 	private int worldY;
 	
-	public Player() {
-		super("player");
+	private Item[] inventory = new Item[6];
+	//private int frame = 0;
+	public Player(Image[] playerFrames) {
+		super("player",playerFrames);
 		//this.x = 3740;
 		//this.y = 2416;
 		this.x = 736;
@@ -14,32 +16,42 @@ public class Player extends Person {
 
 	}
 
-	
-	public boolean isCollision(Map map,boolean up, boolean down, boolean left, boolean right) {
+
+	public Item[] getInventory() {
+		return inventory;
+	}
+	public boolean isCollision(Map map,boolean up, boolean down, boolean left, boolean right,boolean twoDirectionLeft, boolean twoDirectionRight) {
 		int arrRow=0,arrCol=0;
-		
+
 		if (left) {
 			arrRow = (int)Math.round((this.y+map.getY())/50);
-			arrCol = (int)Math.round((this.x+map.getX()-40)/50);
-		}else if (right) {
+			arrCol = (int)Math.round((this.x+map.getX()-35)/50);
+			if (map.getMapArr()[arrRow][arrCol] == 1) {
+				return false;
+			}
+		}if (right) {
 			arrRow = (int)Math.round((this.y+map.getY())/50);
 			arrCol = (int)Math.round((this.x+map.getX())/50);
-		}else if (up) {
-			arrRow = (int)Math.round((this.y+map.getY())/50);
-			arrCol = (int)Math.round((this.x+map.getX())/50);
-		}else if (down) {
+			if (map.getMapArr()[arrRow][arrCol] == 1) {
+				return false;
+			}
+		}if (up) {
+			arrRow = (int)Math.round((this.y+map.getY()-5)/50);
+			arrCol = (int)Math.round((this.x+map.getX()-10)/50);
+			if (map.getMapArr()[arrRow][arrCol] == 1) {
+				return false;
+			}
+
+		}if (down) {
 			arrRow = (int)Math.round((this.y+map.getY()+10)/50);
-			arrCol = (int)Math.round((this.x+map.getX())/50);
+			arrCol = (int)Math.round((this.x+map.getX()-10)/50);
+			if (map.getMapArr()[arrRow][arrCol] == 1) {
+				return false;
+			}
 		}
 		//System.out.println(arrRow + " " + arrCol);
-		if (map.getMapArr()[arrRow][arrCol] == 1) {
-			return false;
-		}
-		else{
-			return true;
-		}
-
+		return true;
 	}
-
 	
+
 }
