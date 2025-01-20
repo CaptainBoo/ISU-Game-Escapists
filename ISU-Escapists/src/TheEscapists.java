@@ -68,9 +68,9 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		//		offScreenBuffer.fillRect(110, 110, 90, 90);
 		//		g.drawImage(offScreenImage, 0, 0, this);
 
-		if (state == 0) {
+		if (state == 0) { // start menu
 			g.drawImage(startMenu, 0, 0, 1472, 832, this);
-		} else if (state == 1 || state == 2) {
+		} else if (state == 1 || state == 2) { // in game 
 			g.drawImage(map.getImage(), -map.getX(), -map.getY(), this);
 
 			//			g.drawImage(itemImages[0], 200, 100, 200, 200, this);
@@ -103,11 +103,11 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 
 			g.drawString("Heat: " + player.getHeat(), 140, 550);
 
-		} else if (state == 3) {
+		} else if (state == 3) { // credits screen
 			g.drawImage(credits, 0, 0, 1472, 832, this);
-		} else if (state == 4) {
+		} else if (state == 4) { // instructions screen
 			g.drawImage(instructions, 0, 0, 1472, 832, this);
-		} else if (state == 5) {
+		} else if (state == 5) { // game over screen
 			g.drawImage(gameOver, 0, 0, 1472, 832, this);
 		}
 
@@ -116,6 +116,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	public void initialize() {
 		inventory = Toolkit.getDefaultToolkit().getImage("images/inventory.png");
 
+		// Item images
 		items = new Item[12];
 		items[0] = new Item("comb", Toolkit.getDefaultToolkit().getImage("images/comb.png"));
 		items[1] = new Item("contraband_pouch", Toolkit.getDefaultToolkit().getImage("images/contraband_pouch.png"));
@@ -133,6 +134,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		prisonerFrames = new Image[1];
 		prisonerFrames[0] = Toolkit.getDefaultToolkit().getImage("images/escapists_character_temp.png");
 
+		// Screen images
 		startMenu = Toolkit.getDefaultToolkit().getImage("images/main_menu.png");
 		credits = Toolkit.getDefaultToolkit().getImage("images/credits.png");
 		instructions = Toolkit.getDefaultToolkit().getImage("images/instructions.png");
@@ -145,7 +147,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		guards = new Guard[1];
 		guards[0] = new Guard("Guard 1");
 
-
+		// Initializing audio
 		try {
 			AudioInputStream sound = AudioSystem.getAudioInputStream(new File("sounds/Main Menu.wav"));
 			mainMenu = AudioSystem.getClip();
