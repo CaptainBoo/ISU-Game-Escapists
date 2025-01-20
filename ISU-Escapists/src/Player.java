@@ -1,10 +1,11 @@
 import java.awt.Image;
+import java.util.LinkedList;
 
 public class Player extends Person {
 	private int worldX;
 	private int worldY;
 	private int heat;
-	private Item[] inventory = new Item[6];
+	private LinkedList<Item> inventory = new LinkedList<>();
 	//private int frame = 0;
 	public Player(Image[] playerFrames) {
 		super("player",playerFrames);
@@ -17,7 +18,7 @@ public class Player extends Person {
 	}
 
 
-	public Item[] getInventory() {
+	public LinkedList<Item> getInventory() {
 		return inventory;
 	}
 	public boolean isCollision(Map map,boolean up, boolean down, boolean left, boolean right) {

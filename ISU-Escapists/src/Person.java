@@ -21,7 +21,7 @@ abstract public class Person {
 
 
 
-	private Item[] inventory = new Item[6];
+//	private Item[] inventory = new Item[6];
 
 	// Directions for pathfinding and movement
 	// Directions: Down, Right, Up, Left
@@ -67,9 +67,7 @@ abstract public class Person {
 	}
 
 
-	public Item[] getInventory() {
-		return inventory;
-	}
+
 
 
 	public int getFrameIndex() {
@@ -172,7 +170,7 @@ abstract public class Person {
 			for (int i = 0; i < 4; i++) {
 				int nx = cx + dx[i];
 				int ny = cy + dy[i];
-				if (nx >= 0 && ny >= 0 && nx < rows && ny < cols && !visited[nx][ny] && map[nx][ny] == 0) {
+				if (nx >= 0 && ny >= 0 && nx < rows && ny < cols && !visited[nx][ny] && map[nx][ny] != 1) {
 					visited[nx][ny] = true;
 					parent[nx][ny] = cx * cols + cy; // Encode parent as an integer
 					queue.add(new int[] { nx, ny });
@@ -192,7 +190,10 @@ abstract public class Person {
 		return this.characterFrame;
 	}
 	
-	public void setCharacterFrame(int increment) {
+	public void incrementCharacterFrame(int increment) {
 		this.characterFrame+= increment;
+	}
+	public void setCharacterFrame(int value) {
+		this.characterFrame = value;
 	}
 }

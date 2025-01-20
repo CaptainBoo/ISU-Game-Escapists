@@ -11,6 +11,7 @@ public class Map {
 	private int xCord;
 	private int yCord;
 	private Image mapImg;
+	
 
 	public Map() {
 		setCollisionSpaces();
@@ -155,7 +156,7 @@ public class Map {
 		}for (int i = 11; i <= 38; i++) {
 			mapArr[37][i] = 1;
 		}
-		for (int i = 22; i <= 73; i++) {
+		for (int i = 19; i <= 73; i++) {
 			mapArr[i][22] =1;
 		}for (int i = 11; i <= 22; i++) {
 			mapArr[73][i] = 1;
@@ -202,13 +203,14 @@ public class Map {
 		for (int i = 65; i <= 91; i++) {
 			mapArr[34][i] = 1;
 		}
-		//Turning the doors into 0s
-		for (int i = 68; i <= 79; i+= 7) {
-			mapArr[53][i] = 8;
-			mapArr[58][i] = 8;
-			mapArr[34][i] = 8;
-			mapArr[77][i] = 8;
+		
+		for (int i = 19; i <= 24; i++) {
+			mapArr[i][38] = 1;
+		}for (int i = 39; i <= 52; i++) {
+			mapArr[33][i] = 1;
 		}
+		//Turning the doors into 0s
+		
 		//key:
 		/*
 		0 is free
@@ -220,6 +222,7 @@ public class Map {
 		6 is contraband detector
 		7 is that one nurse door
 		8 are the cell doors
+		9 are the drawers
 		//Dont ask why theres doors at 82 8
 		*/
 		mapArr[91][92] = 2;
@@ -241,8 +244,8 @@ public class Map {
 		mapArr[73][17] = 4;
 		mapArr[39][22] = 4;
 		mapArr[38][22]	 = 4;
-		mapArr[38][30] = 4;
-		mapArr[38][29] = 4;
+		mapArr[37][30] = 4;
+		mapArr[37][29] = 4;
 		mapArr[33][45] = 6;
 		mapArr[33][46] = 6;
 		mapArr[24][53] = 6;
@@ -257,6 +260,43 @@ public class Map {
 		mapArr[25][93] = 4;
 		mapArr[26][93] = 4;
 		mapArr[25][108] = 7;
+		mapArr[52][68] = 8;
+		mapArr[52][75] = 8;
+		mapArr[52][82] = 8;
+		mapArr[52][88] = 8;
+		mapArr[58][68] = 8;
+		mapArr[58][75] = 8;
+		mapArr[58][82] = 8;
+		mapArr[58][88] = 8;
+		mapArr[53][68] = 8;
+		mapArr[53][75] = 8;
+		mapArr[53][82] = 8;
+		mapArr[53][88] = 8;
+		mapArr[34][68] = 8;
+		mapArr[34][75] = 8;
+		mapArr[34][82] = 8;
+		mapArr[34][88] = 8;
+		mapArr[76][68] = 8;
+		mapArr[76][75] = 8;
+		mapArr[76][82] = 8;
+		mapArr[76][88] = 8;
+		//Adding drawers
+		mapArr[49][72] = 9;
+		mapArr[49][65] = 9;
+		mapArr[49][79] = 9;
+		mapArr[49][86] = 9; 
+		mapArr[37][70] = 9;
+		mapArr[37][77] = 9;	
+		mapArr[37][84] = 9;
+		mapArr[37][91] = 9;
+		mapArr[61][72] = 9;
+		mapArr[61][65] = 9;
+		mapArr[61][79] = 9;
+		mapArr[61][86] = 9; 
+		mapArr[73][70] = 9;
+		mapArr[73][77] = 9;	
+		mapArr[73][84] = 9;
+		mapArr[73][91] = 9;
 	}
 	
 	
