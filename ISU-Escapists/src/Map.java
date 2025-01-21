@@ -12,7 +12,9 @@ public class Map {
 	private int yCord;
 	private Image mapImg;
 	
-
+	//Constructor for Map class. This is where we intilize our map's image as well as its borders, and its coordinates.
+	//Parameters: None
+	//Return: None
 	public Map() {
 		setCollisionSpaces();
 		BufferedImage image;
@@ -46,6 +48,9 @@ public class Map {
 		return this.mapArr;
 	}
 
+	//This is the borders of our game. Took me at least 2-3 hours alone to get all these done.
+	//Parameters: None
+	//Return: Void
 	public void setCollisionSpaces() {
 		for (int i = 0; i < mapArr.length; i++) {
 			for (int j = 0; j < mapArr[i].length; j++) {
@@ -212,6 +217,11 @@ public class Map {
 		for (int i = 67; i <= 91; i++) {
 			mapArr[111][i] = 1;
 		}
+		for (int i = 67; i <= 77; i++) {
+			mapArr[i][85] = 1;
+			mapArr[i][78] = 1;
+			mapArr[i][71] = 1;
+		}
 		//Turning the doors into 0s
 		
 		//key:
@@ -280,9 +290,11 @@ public class Map {
 		mapArr[34][82] = 8;
 		mapArr[34][88] = 8;
 		mapArr[76][68] = 8;
-		mapArr[76][75] = 8;
-		mapArr[76][82] = 8;
-		mapArr[76][88] = 8;
+		mapArr[77][68] = 8;
+		mapArr[77][75] = 8;
+		mapArr[77][82] = 8;
+		mapArr[77][88] = 8;
+		mapArr[77][89] = 8;	
 		//Adding drawers
 		mapArr[49][72] = 9;
 		mapArr[49][65] = 9;
@@ -292,17 +304,23 @@ public class Map {
 		mapArr[37][77] = 9;	
 		mapArr[37][84] = 9;
 		mapArr[37][91] = 9;
-		mapArr[61][72] = 9;
-		mapArr[61][65] = 9;
-		mapArr[61][79] = 9;
-		mapArr[61][86] = 9; 
-		mapArr[73][70] = 9;
-		mapArr[73][77] = 9;	
-		mapArr[73][84] = 9;
+		mapArr[62][69] = 9;	
+		mapArr[61][69] = 9;
+		mapArr[61][76] = 9;
+		mapArr[61][83] = 9;
+		mapArr[61][84] = 9;
+		mapArr[61][90] = 9; 
+		mapArr[61][91] = 9;
+		mapArr[73][65] = 9;
+		mapArr[73][72] = 9;
+		mapArr[73][79] = 9;	
+		mapArr[73][86] = 9;
 		mapArr[73][91] = 9;
 	}
 	
-	
+	//Since we move our player by moving the map behind him, our move method is in our map class
+	//Parameters: String dir
+	//Return: Void
 	public void move(String dir) {
 		if (dir.equals("left")) {
 			this.xCord -= 8;

@@ -83,7 +83,7 @@ abstract public class Person {
 			while (path.isEmpty()) {
 				destX = (int) (Math.random() * grid.length + 1);
 				destY = (int) (Math.random() * grid[0].length + 1);
-				path = findPath(grid, new int[] { col, row }, new int[] { destX, destY });
+				path = findPath(map, grid, new int[] { col, row }, new int[] { destX, destY });
 				pathSize = path.size();
 			}
 			currentlyPathfinding = true;
@@ -147,7 +147,7 @@ abstract public class Person {
 			currentlyPathfinding = false;
 	}
 
-	public static ArrayList<int[]> findPath(int[][] map, int[] start, int[] goal) {
+	public static ArrayList<int[]> findPath(Map tempMap, int[][] map, int[] start, int[] goal) {
 		int rows = map.length;
 		int cols = map[0].length;
 
@@ -194,7 +194,9 @@ abstract public class Person {
 			for (int i = 0; i < 4; i++) {
 				int nx = cx + dx[i];
 				int ny = cy + dy[i];
-				if (nx >= 0 && ny >= 0 && nx < rows && ny < cols && !visited[nx][ny] && map[nx][ny] != 1) {
+				int row = (nx + tempMap.getX())/50;
+				int col = (ny + tempMap.getY())/50;
+				if (nx >= 0 && ny >= 0 && nx < rows && ny < cols && !visited[nx][ny] && tempMap.getMapArr()[row][col] != 1) {
 					visited[nx][ny] = true;
 					parent[nx][ny] = cx * cols + cy; // Encode parent as an integer
 					queue.add(new int[] { nx, ny });

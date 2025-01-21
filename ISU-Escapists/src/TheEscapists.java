@@ -14,8 +14,8 @@ import javax.swing.*;
 @SuppressWarnings("serial")
 public class TheEscapists extends JPanel implements Runnable, KeyListener, MouseListener, MouseMotionListener {
 	LinkedList<Item> drawerLoot,craftingItems = new LinkedList<>();
-	Graphics offScreenBuffer;
-	Image offScreenImage, startMenu,drawerMenu, craftingMenu;
+	Graphics offScreenBuffer; 	
+	Image offScreenImage, startMenu,drawerMenu, craftingMenu,credits, instructions,gameOver,winScreen;
 	int FPS = 60;
 	int frame = 0;
 	int mouseX, mouseY;
@@ -26,11 +26,11 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	Player player;
 	int[] drawerCordsX = {425,544,653,772,891,1010,425,544,653,772,891,1010}; //356 +61
 	int[] drawerCordsY = {275,275,275,275,275,275,392,392,392,392,392,392};//363 -81
-	int[] inventoryCordsX = {150,265,380,495,605,715};
+	int[] inventoryCordsX = {150,265,380,495,610,720};
 	int[] craftingCordsX = {600,673,750};
-	int[] recipeCordsX = {440,520,595,690,750};
+	int[] recipeCordsX = {440,520,595,675,750};
 	HashMap<String, String[]> allRecipes = new HashMap<>();
-	TreeMap<String, String[]> knownRecipes = new TreeMap<>();
+	TreeSet<String> knownRecipes = new TreeSet<>();
 	//boolean left, right, up, down;
 
 	Set<Integer> keys = new HashSet<Integer>();
@@ -46,9 +46,12 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	Guard[] guards;
 
 	Clip mainMenu, ambient, heat;
-	int state = 0; // 0 = main menu, 1 = in game, 2 = heat (guard angry), 3 = instructions, 4 = credits
+	int state = 0; // 0 = main menu, 1 = in game, 2 = heat (guard angry), 3 = credits, 4 = instructions, 5 = game over
 	int previousState = -1;
 
+	//Constrctor class where we intiliaze our map and thread. We also adjust our panel variables
+	//Parameters: None
+	//Return: None
 	public TheEscapists() {
 		// Make my class instances
 		map = new Map();
@@ -60,7 +63,11 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		thread.start();
 	}
 
-
+	
+	//Overridden paintComponent method which we use to draw all the images for our game
+	//including the map, inventory, items, etc.
+	//Parameters: Graphics graphic
+	//Return: void
 	public void paintComponent(Graphics graphic) {
 		Graphics2D g = (Graphics2D) graphic;
 		super.paintComponent(g);
@@ -77,34 +84,9 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		//		offScreenBuffer.fillRect(110, 110, 90, 90);
 		//		g.drawImage(offScreenImage, 0, 0, this);
 
-
-		if (state == 0) {
+		if (state == 0) { // start menu
 			g.drawImage(startMenu, 0, 0, 1472, 832, this);
-			//			
-			//			// Start button
-			//			g.setColor(Color.BLACK);
-			//			g.setStroke(new BasicStroke(10));
-			//			g.drawRect(536, 620, 400, 150);
-			//			g.setColor(Color.GRAY);
-			//			g.fillRect(536, 620, 400, 150);
-			//			
-			//			// Instructions button
-			//			g.setColor(Color.BLACK);
-			//			g.setStroke(new BasicStroke(10));
-			//			g.drawRect(100, 620, 400, 150);
-			//			g.setColor(Color.GRAY);
-			//			g.fillRect(100, 620, 400, 150);
-			//			
-			//			// Credits button
-			//			g.setColor(Color.BLACK);
-			//			g.setStroke(new BasicStroke(10));
-			//			g.drawRect(972, 620, 400, 150);
-			//			g.setColor(Color.GRAY);
-			//			g.fillRect(972, 620, 400, 150);
-
-		}
-
-		if (state == 1 || state == 2) {
+		} else if (state == 1 || state == 2) { // in game 
 			g.drawImage(map.getImage(), -map.getX(), -map.getY(), this);
 
 			//			g.drawImage(itemImages[0], 200, 100, 200, 200, this);
@@ -115,9 +97,9 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 			for (int i = 0; i < prisoners.length; i++) {
 				g.drawImage(prisoners[i].getPlayerFrames()[prisoners[i].getCharacterFrame()], prisoners[i].getX() - map.getX(), prisoners[i].getY() - map.getY(),
 						prisoners[i].getHitbox().width, prisoners[i].getHitbox().height, this);
-
 			}
 			for (int i = 0; i < guards.length; i++) {
+
 				g.drawImage(guards[i].getPlayerFrames()[0], guards[i].getX() - map.getX(), guards[i].getY() - map.getY(),
 						guards[i].getHitbox().width, guards[i].getHitbox().height, this);
 
@@ -135,9 +117,14 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 
 			g.drawString("Heat: " + player.getHeat(), 140, 550);
 
+
 			//Inventory
 			for (int i = 0; i< player.getInventory().size();i++) {
-				g.drawImage(player.getInventory().get(i).getItemImage(),inventoryCordsX[i],620,80,80,this);									
+				if (player.getInventory().get(i).isContraband()) {
+					g.setColor(new Color (124,72,66));
+					g.fillRect(inventoryCordsX[i]+5, 615, 80,80);
+				}
+				g.drawImage(player.getInventory().get(i).getItemImage(),inventoryCordsX[i],620,80,80,this);
 			}
 			//Drawers
 			if (drawerOpened) {
@@ -156,7 +143,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 				}
 				int itemCount = 0;
 				//Recipes
-				for (String key : knownRecipes.keySet()) {
+				for (String key : knownRecipes) {
 					for (int i = 7; i<items.length-1;i++) {
 						if (items[i].getItemName().equals(key)) {
 							g.drawImage(items[i].getItemImage(),recipeCordsX[itemCount],195,50,50,this);	
@@ -167,10 +154,24 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 			}
 
 
+
+		} else if (state == 3) { // credits screen
+			g.drawImage(credits, 0, 0, 1472, 832, this);
+		} else if (state == 4) { // instructions screen
+			g.drawImage(instructions, 0, 0, 1472, 832, this);
+		} else if (state == 5) { // game over screen
+			g.drawImage(gameOver, 0, 0, 1472, 832, this);
+
+		}else if (state == 6 ) {
+			g.drawImage(winScreen , 0, 0, 1472, 832, this);
 		}
 
 	}
 
+	//This method generates the loot in our drawers. A drawer can generate up to 12 items
+	//but its more likely to get low items are harder to get more items.30% for 1 item, 1% for 12
+	//Parameters: None
+	//Return: LinkedList<Item> which is our list of items for loot
 	public LinkedList<Item> generateLoot() {
 		int[] weights = {30, 20, 15, 10, 7, 5, 4, 3, 2, 2, 1, 1}; // Probabilities for 1-12
 		Random random = new Random();
@@ -202,8 +203,13 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 
 
 	}
+	
+	//This is the method in which we initlize all our images and audio
+	//Parameters: None
+	//Return: Void
 	public void initialize() {
 		inventory = Toolkit.getDefaultToolkit().getImage("images/inventory.png");
+
 
 		items = new Item[15];
 		items[0] = new Item("comb", Toolkit.getDefaultToolkit().getImage("images/comb.png"),false);
@@ -223,11 +229,11 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		items[14] = new Item("cyan_key",Toolkit.getDefaultToolkit().getImage("images/cyan_key.png"),true);
 
 
-		 allRecipes.put("flimsy_pickaxe", new String[]{"crowbar", "duct_tape", "tool_handle"});
-        allRecipes.put("contraband_pouch", new String[]{"foil", "foil", "duct_tape"});
-        allRecipes.put("molten_plastic", new String[]{"comb", "comb", "lighter"});
-        allRecipes.put("guard_outfit", new String[]{"jar_of_ink", "jar_of_ink", "inmate_outfit"});
-        allRecipes.put("tool_handle", new String[]{"foil", "crowbar", "duct_tape"});
+		allRecipes.put("flimsy_pickaxe", new String[]{"crowbar", "duct_tape", "tool_handle"});
+		allRecipes.put("contraband_pouch", new String[]{"foil", "foil", "duct_tape"});
+		allRecipes.put("molten_plastic", new String[]{"comb", "comb", "lighter"});
+		allRecipes.put("guard_outfit", new String[]{"jar_of_ink", "jar_of_ink", "inmate_outfit"});
+		allRecipes.put("tool_handle", new String[]{"foil", "crowbar", "duct_tape"});
 
 		prisonerFrames = new Image[1];
 		prisonerFrames[0] = Toolkit.getDefaultToolkit().getImage("images/escapists_character_temp.png");
@@ -277,6 +283,15 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		guards[2] = new Guard("Guard3",guardFrames);
 
 
+		// Screen images
+		startMenu = Toolkit.getDefaultToolkit().getImage("images/main_menu.png");
+		credits = Toolkit.getDefaultToolkit().getImage("images/credits.png");
+		instructions = Toolkit.getDefaultToolkit().getImage("images/instructions.png");
+		gameOver = Toolkit.getDefaultToolkit().getImage("images/gameover.png");
+		winScreen = Toolkit.getDefaultToolkit().getImage("images/winScreen.png");
+		
+
+		// Initializing audio
 		try {
 			AudioInputStream sound = AudioSystem.getAudioInputStream(new File("sounds/Main Menu.wav"));
 			mainMenu = AudioSystem.getClip();
@@ -292,7 +307,10 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 			e.printStackTrace();
 		}
 	}
-
+	
+	//This method handles the movement of our player by moving the map behind him with the move method from the map class
+	//Parameters: None
+	//Return: Void
 	public void move() {
 
 		if (player.isCollision(map,up,down,left,right)) {
@@ -308,6 +326,9 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		}
 	}
 
+	//This method handles the movement frame of our player to give him animation depending on what direction he is moving in
+	//Parameters: None
+	//Return: Void
 	public void handleFrames() {
 		if (up) {
 			if (frame % 10 == 0) {
@@ -315,12 +336,12 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 				if (player.getCharacterFrame() >=4) {
 					player.incrementCharacterFrame(-4);
 				}
-//				for (int i = 0; i < prisoners.length;i++) {
-//					prisoners[i].incrementCharacterFrame(1);
-//					if (prisoners[i].getCharacterFrame() >=4) {
-//						prisoners[i].incrementCharacterFrame(-4);
-//					}
-//				}
+				//				for (int i = 0; i < prisoners.length;i++) {
+				//					prisoners[i].incrementCharacterFrame(1);
+				//					if (prisoners[i].getCharacterFrame() >=4) {
+				//						prisoners[i].incrementCharacterFrame(-4);
+				//					}
+				//				}
 			}
 		}if (down) {
 			if (frame % 10 == 0) {
@@ -328,12 +349,12 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 				if (player.getCharacterFrame() >=8) {
 					player.incrementCharacterFrame(-4);
 				}
-//				for (int i = 0; i < prisoners.length;i++) {
-//					prisoners[i].incrementCharacterFrame(1);
-//					if (prisoners[i].getCharacterFrame() >=8) {
-//						prisoners[i].incrementCharacterFrame(-4);
-//					}
-//				}
+				//				for (int i = 0; i < prisoners.length;i++) {
+				//					prisoners[i].incrementCharacterFrame(1);
+				//					if (prisoners[i].getCharacterFrame() >=8) {
+				//						prisoners[i].incrementCharacterFrame(-4);
+				//					}
+				//				}
 			}
 		}if (left && !up && !down) {
 			if (frame % 10 == 0) {
@@ -341,12 +362,12 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 				if (player.getCharacterFrame() >=12) {
 					player.incrementCharacterFrame(-4);
 				}
-//				for (int i = 0; i < prisoners.length;i++) {
-//					prisoners[i].incrementCharacterFrame(1);
-//					if (prisoners[i].getCharacterFrame() >=12) {
-//						prisoners[i].incrementCharacterFrame(-4);
-//					}
-//				}
+				//				for (int i = 0; i < prisoners.length;i++) {
+				//					prisoners[i].incrementCharacterFrame(1);
+				//					if (prisoners[i].getCharacterFrame() >=12) {
+				//						prisoners[i].incrementCharacterFrame(-4);
+				//					}
+				//				}
 			}
 		}if (right && !up && !down) {
 			if (frame % 10 == 0) {
@@ -354,32 +375,44 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 				if (player.getCharacterFrame() >=16) {
 					player.incrementCharacterFrame(-4);
 				}
-//				for (int i = 0; i < prisoners.length;i++) {
-//					prisoners[i].incrementCharacterFrame(1);
-//					if (prisoners[i].getCharacterFrame() >=16) {
-//						prisoners[i].incrementCharacterFrame(-4);
-//					}
-//				}
+				//				for (int i = 0; i < prisoners.length;i++) {
+				//					prisoners[i].incrementCharacterFrame(1);
+				//					if (prisoners[i].getCharacterFrame() >=16) {
+				//						prisoners[i].incrementCharacterFrame(-4);
+				//					}
+				//				}
 			}
 
 		}
 
 	}
+	
+	//this method is called everytime our run method runs. In here we just call lots of our other methods that need to be updated
+	//As well as handle movement for prisoners/guards and handle the gamestates
+	//Parameters: None
+	//Return: Void
 	public void update() {
+
 		//System.out.println(lootChanged);
 
 		frame++;
 		handleFrames();
+
 		for (Prisoner prisoner : prisoners) {
 			prisoner.randomMovement(map.getMapArr(), map,frame);
 		}
 		for (Guard guard : guards) {
-			if (player.getHeat() >= 70) {
-				if (Math.hypot(guard.getX() - player.getX(), guard.getY() - guard.getX()) < 500) {
-					guard.chasePlayer(map.getMapArr(), map, player);
-				}
+
+			//			guard.chasePlayer(map.getMapArr(), map, player);
+
+			if (player.getHeat() >= 70 && (Math.hypot(guard.getX() - map.getX() - 736, guard.getY() - map.getY() - 416) < 500)) {
+				guard.chasePlayer(map.getMapArr(), map, player);
 			} else {
 				guard.randomMovement(map.getMapArr(), map,frame);
+			}
+
+			if (new Rectangle (guard.getX(), guard.getY(), 40, 90).intersects(new Rectangle(map.getX() + 736, map.getY() + 416, 40, 90))) {
+				state = 5;
 			}
 		}
 
@@ -397,7 +430,10 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 
 	}
 
-
+	//This method is where we handle crafting. All recipes start undiscovered and you have to discover them. There are up to 5 different recipes
+	//This method uses sort and Arrays.equals to check if the Array of items you provided is equal to the recipe array in our hash map
+	//Parameters: None
+	//Return: Void
 	public void handleCrafting() {
 		System.out.println("ran1");
 		String[] compareArr =new String[craftingItems.size()] ;
@@ -417,7 +453,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 			}
 			if (Arrays.equals(compareArr, tempArr)){
 				System.out.println("ran3");
-				knownRecipes.put(key, allRecipes.get(key));
+				knownRecipes.add(key);
 				dontRefundItems=true;
 				for (int i = 7; i<items.length-1;i++) {
 					if (items[i].getItemName().equals(key)) {
@@ -425,12 +461,16 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 					}
 				}
 			}
-			
-			
+
+
 
 		}
 	}
-
+	
+	//This overridden method is for our thread and it runs every frame.
+	//In this method we generate our drawers first loop, start our sounds, handles movement and increments our frames.
+	//Parameters: None
+	//Return: Void
 	public void run() {
 		initialize();
 		drawerLoot = generateLoot();
@@ -451,6 +491,9 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		}
 	}
 
+	//This method starts our song files and has them on loop. It plays different sound tracks depening on what game state we are in.
+	//Parameters: None
+	//Return: Void
 	public void runSounds() {
 		if (state != previousState) {
 			stopAllSounds();
@@ -463,23 +506,34 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 			} else if (state == 1){
 				ambient.setFramePosition(0);
 				ambient.loop(Clip.LOOP_CONTINUOUSLY);
-			} 
+			} else if (state == 6) {
+				mainMenu.setFramePosition(0);
+				mainMenu.loop(Clip.LOOP_CONTINUOUSLY);
+			}
 		}
 		previousState = state;	
 	}
-
+	//This method stops all our soundtracks so that there will be no audio
+	//Parameters: None
+	//Return: Void
 	public void stopAllSounds() {
 		if (mainMenu.isRunning()) mainMenu.stop();
 		if (ambient.isRunning()) ambient.stop();
 		if (heat.isRunning()) heat.stop();
 	}
 
+	//Not used
 	public void mouseClicked(MouseEvent e) {
 
 	}
 
 
+	//This overridden method triggers whenever my mouse is pressed. If we are in a drawer it'll move items
+	//When we are in crafting we will try crafting, and otherwise we print the coordinates of our mouse (for coding help)
+	//Parameters: MouseEvent e
+	//Return: Void
 	public void mousePressed(MouseEvent e) {
+		
 		if (drawerOpened) {
 
 			PointerInfo pointerInfo = MouseInfo.getPointerInfo();
@@ -553,7 +607,27 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 			System.out.println(arrRow + " " + arrCol);
 			System.out.println(worldRow + " " + worldCol);
 			System.out.println(mouseRow + " " +mouseCol);
+			if (state == 0) {
+				if (mouseX >= 564 && mouseX <= 972 && mouseY >= 640 && mouseY <= 810) {
+					state = 1;
+				}
+				else if (mouseX >= 130 && mouseX <= 536 && mouseY >= 640 && mouseY <= 810) {
+					state = 3;
+				}
+				else if (mouseX >= 998 && mouseX <= 1410 && mouseY >= 640 && mouseY <= 810) {
+					state = 4;
+				}
+			} else if (state == 3 || state == 4) {
+				if ( mouseX >= 46 && mouseX <= 178 && mouseY >= 717 && mouseY <= 791 || mouseX >= -54 && mouseX <= 69 && mouseY >= 765 && mouseY <= 882) {
+					state = 0;
+				}
+			}
 		}
+		
+
+
+
+
 
 
 	}
@@ -573,6 +647,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	public void mouseMoved(MouseEvent e) {
 	}
 
+	//Our main method we adjust our JFrame as well as make our new TheEscapists() instance.
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("The Escapists");
 		TheEscapists gamePanel = new TheEscapists();
@@ -591,6 +666,9 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 	public void keyTyped(KeyEvent e) {
 	}
 
+	//This method is triggered whenever a key is pressed and is used to handle moving and changing state
+	//Parameters: KeyEvent e
+	//Return: Void
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
 		if (key == KeyEvent.VK_A) {
@@ -636,6 +714,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 		}
 	}
 
+	//This overridden method is used to stop moving once a key is released and is also used to craft and open drawers.
 	public void keyReleased(KeyEvent e) {
 		int key = e.getKeyCode();
 		if (key == KeyEvent.VK_A) {
@@ -661,7 +740,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 			if (drawerOpened) {
 				drawerOpened = false;
 				drawerLoot = generateLoot();					
-				
+
 			}else {
 				PointerInfo pointerInfo = MouseInfo.getPointerInfo();
 				int mouseX = pointerInfo.getLocation().x-74;
@@ -687,7 +766,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 					drawerLoot.add(items[14]);
 				}
 				if (mouseRow >= 106 && mouseRow <= 108 && mouseCol >= 71 && mouseCol <= 77) {
-					//win
+					state = 6;
 				}
 				System.out.println(mouseRow + " " + mouseCol);
 				if (map.getMapArr()[mouseRow][mouseCol] == 9 && Math.abs(playerRow-mouseRow) <= 2 && Math.abs(playerCol - mouseCol) <= 2) {
@@ -705,7 +784,7 @@ public class TheEscapists extends JPanel implements Runnable, KeyListener, Mouse
 				dontRefundItems=false;
 			}
 			craftingItems.clear();
-			
+
 		}
 
 	}

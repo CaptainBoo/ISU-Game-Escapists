@@ -20,7 +20,7 @@ public class Guard extends Person {
 		int playerY = (int) Math.round((player.getY()) / 50);
 		int size = 0;
 		if (!currentlyPathfinding) {
-			path = findPath(grid, new int[] { col, row }, new int[] { playerX, playerY });
+			path = findPath(map, grid, new int[] { col, row }, new int[] { playerX, playerY });
 			size = path.size();
 			currentlyPathfinding = true;
 		}
